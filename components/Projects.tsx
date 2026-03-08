@@ -162,7 +162,7 @@ function ProjectCard({ project }: { project: Project }) {
       {/* Banner */}
       <div
         style={{
-          height: 160,
+          height: 190,
           background: project.gradient,
           display: "flex",
           alignItems: "center",
@@ -334,8 +334,8 @@ export default function Projects() {
       ref={sectionRef}
       id="projects"
       style={{
-        padding: "64px 28px",
-        maxWidth: 1100,
+        padding: "64px 5%",
+        maxWidth: 1440,
         margin: "0 auto",
       }}
     >
@@ -389,7 +389,7 @@ export default function Projects() {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 22,
+          gap: 28,
         }}
       >
         {projects.map((project, i) => (

@@ -47,7 +47,7 @@ export default function Contact() {
     <section
       ref={ref}
       id="contact"
-      style={{ padding: "64px 28px 80px", maxWidth: 1100, margin: "0 auto" }}
+      style={{ padding: "64px 5% 80px", maxWidth: 1440, margin: "0 auto" }}
     >
       <div
         style={{

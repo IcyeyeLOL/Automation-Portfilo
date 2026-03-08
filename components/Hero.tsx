@@ -114,10 +114,10 @@ export default function Hero() {
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
-        padding: "80px 28px 48px",
-        maxWidth: 1100,
+        padding: "80px 5% 48px",
+        maxWidth: 1440,
         margin: "0 auto",
-        gap: 48,
+        gap: 60,
       }}
     >
       {/* ── Left column ── */}
@@ -131,11 +131,11 @@ export default function Hero() {
       >
         {/* Avatar + status */}
         <div style={{ ...shownLeft(100), display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ position: "relative", width: 64, height: 64, flexShrink: 0 }}>
+          <div style={{ position: "relative", width: 80, height: 80, flexShrink: 0 }}>
             <div
               style={{
-                width: 64,
-                height: 64,
+                width: 80,
+                height: 80,
                 borderRadius: "50%",
                 overflow: "hidden",
                 border: "2px solid var(--accent)",
@@ -146,8 +146,8 @@ export default function Hero() {
               <Image
                 src="/kunle-face.png"
                 alt="Olakunle Ajani"
-                width={64}
-                height={64}
+                width={80}
+                height={80}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
                 priority
               />
@@ -157,8 +157,8 @@ export default function Hero() {
                 position: "absolute",
                 bottom: 3,
                 right: 3,
-                width: 13,
-                height: 13,
+                width: 15,
+                height: 15,
                 borderRadius: "50%",
                 background: "var(--accent)",
                 border: "2px solid var(--bg-base)",
@@ -178,7 +178,7 @@ export default function Hero() {
         <div style={shownLeft(200)}>
           <h1
             style={{
-              fontSize: "clamp(2.2rem, 4.2vw, 3.6rem)",
+              fontSize: "clamp(2.6rem, 4.8vw, 4.2rem)",
               fontWeight: 800,
               lineHeight: 1.1,
               letterSpacing: "-0.035em",
@@ -215,10 +215,10 @@ export default function Hero() {
         <div style={shownLeft(300)}>
           <p
             style={{
-              fontSize: "1.05rem",
+              fontSize: "1.15rem",
               color: "var(--text-muted)",
               lineHeight: 1.72,
-              maxWidth: 430,
+              maxWidth: 520,
             }}
           >
             I build SMS bots, AI follow-up machines, and lead pipelines that run
@@ -320,7 +320,7 @@ export default function Hero() {
             <div key={label}>
               <div
                 style={{
-                  fontSize: "1.5rem",
+                  fontSize: "1.9rem",
                   fontWeight: 800,
                   color: "var(--accent)",
                   lineHeight: 1,
@@ -352,7 +352,7 @@ export default function Hero() {
           style={{
             ...shownRight(300),
             width: "100%",
-            maxWidth: 440,
+            maxWidth: 540,
             background: "var(--bg-card)",
             border: "1px solid var(--border)",
             borderRadius: 18,
@@ -443,20 +443,20 @@ export default function Hero() {
         <div
           style={{
             ...shownRight(500),
-            width: 130,
-            height: 130,
+            width: 180,
+            height: 180,
             borderRadius: "50%",
             overflow: "hidden",
             border: "3px solid var(--accent)",
-            boxShadow: "0 0 40px rgba(57,255,110,0.25)",
+            boxShadow: "0 0 50px rgba(57,255,110,0.3)",
             flexShrink: 0,
           }}
         >
           <Image
             src="/kunle-face.png"
             alt="Olakunle Ajani"
-            width={130}
-            height={130}
+            width={180}
+            height={180}
             style={{ objectFit: "cover", width: "100%", height: "100%" }}
             priority
           />

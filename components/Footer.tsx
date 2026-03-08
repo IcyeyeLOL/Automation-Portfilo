@@ -17,8 +17,8 @@ export default function Footer() {
     <footer
       style={{
         borderTop: "1px solid var(--border)",
-        padding: "24px",
-        maxWidth: 1200,
+        padding: "24px 5%",
+        maxWidth: 1440,
         margin: "0 auto",
         display: "flex",
         alignItems: "center",
