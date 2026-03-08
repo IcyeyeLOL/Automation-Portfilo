@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface Project {
   id: number;
@@ -9,172 +9,244 @@ interface Project {
   tags: string[];
   gradient: string;
   emoji: string;
-  status: "Live" | "In Progress";
+  url: string;
+  accentColor: string;
+  accentRgb: string;
 }
 
 const projects: Project[] = [
   {
     id: 1,
-    title: "Lead Outreach Automator",
+    title: "60-Second Reply",
     description:
-      "Multi-channel outreach system that scrapes leads, personalizes emails with AI, and auto-follows up — fully on autopilot.",
-    tags: ["n8n", "OpenAI", "Gmail API", "Python"],
-    gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
-    emoji: "🎯",
-    status: "Live",
+      "Instantly responds to every new lead within 60 seconds via SMS — before your competition even sees the notification.",
+    tags: ["Twilio", "OpenAI", "Webhooks", "CRM"],
+    gradient: "linear-gradient(135deg, #1a0800 0%, #2d1400 60%, #1a0a00 100%)",
+    emoji: "⚡",
+    url: "/demo",
+    accentColor: "#ff6b00",
+    accentRgb: "255, 107, 0",
   },
   {
     id: 2,
-    title: "AI Email Responder",
+    title: "7-Day Follow-Up Machine",
     description:
-      "Reads incoming emails, classifies intent, drafts context-aware replies, and sends or queues for review — 24/7.",
-    tags: ["Claude API", "Zapier", "Gmail", "TypeScript"],
-    gradient: "linear-gradient(135deg, #0d1b0d 0%, #1a3a1a 50%, #0d2b0d 100%)",
-    emoji: "✉️",
-    status: "Live",
+      "Runs a fully automated 7-day SMS + email drip sequence that keeps leads warm until they're ready to move.",
+    tags: ["n8n", "Twilio", "Gmail API", "Airtable"],
+    gradient: "linear-gradient(135deg, #0d0618 0%, #1a0d2e 60%, #0f0820 100%)",
+    emoji: "🔄",
+    url: "/demo2",
+    accentColor: "#8b5cf6",
+    accentRgb: "139, 92, 246",
   },
   {
     id: 3,
-    title: "Appointment Booking Bot",
+    title: "Review & Referral Robot",
     description:
-      "SMS/WhatsApp bot that handles scheduling, confirmations, reminders, and rescheduling — zero human touchpoints.",
-    tags: ["Twilio", "Calendly API", "Node.js", "n8n"],
-    gradient: "linear-gradient(135deg, #1a0d1a 0%, #2d1a2d 50%, #1a0d2b 100%)",
-    emoji: "📅",
-    status: "In Progress",
+      "After every closed deal, automatically sends review requests, captures feedback, and triggers referral ask sequences.",
+    tags: ["Make.com", "Google Reviews", "Twilio", "HubSpot"],
+    gradient: "linear-gradient(135deg, #181000 0%, #2e1f00 60%, #1c1400 100%)",
+    emoji: "⭐",
+    url: "/demo3",
+    accentColor: "#f59e0b",
+    accentRgb: "245, 158, 11",
   },
   {
     id: 4,
-    title: "Invoice & CRM Sync",
+    title: "Lead Qualifier",
     description:
-      "Auto-generates invoices from job completions, pushes to QuickBooks, and syncs deal stages across HubSpot.",
-    tags: ["QuickBooks API", "HubSpot", "Make.com", "Webhooks"],
-    gradient: "linear-gradient(135deg, #1a1000 0%, #2d1f00 50%, #1a1500 100%)",
-    emoji: "🧾",
-    status: "Live",
+      "AI-powered SMS bot that asks the right questions, scores leads by motivation and timeline, and routes hot ones straight to your calendar.",
+    tags: ["OpenAI", "Twilio", "Calendly API", "n8n"],
+    gradient: "linear-gradient(135deg, #061206 0%, #0e2210 60%, #081508 100%)",
+    emoji: "🎯",
+    url: "/demo4",
+    accentColor: "#22c55e",
+    accentRgb: "34, 197, 94",
   },
   {
     id: 5,
-    title: "Social Media Scheduler",
+    title: "New Listing Blast",
     description:
-      "Generates on-brand content with AI, schedules posts across platforms, and reports engagement — all automated.",
-    tags: ["Make.com", "Claude API", "Instagram API", "Airtable"],
-    gradient: "linear-gradient(135deg, #0d0d1a 0%, #1a1a3a 50%, #0d1a2b 100%)",
-    emoji: "📱",
-    status: "Live",
+      "The moment a listing goes live, automatically blasts your entire database via SMS, email, and social — in under 2 minutes.",
+    tags: ["Zapier", "Twilio", "Mailchimp", "MLS API"],
+    gradient: "linear-gradient(135deg, #001418 0%, #002028 60%, #001a20 100%)",
+    emoji: "🏡",
+    url: "/demo5",
+    accentColor: "#06b6d4",
+    accentRgb: "6, 182, 212",
   },
   {
     id: 6,
-    title: "Cold DM Pipeline",
+    title: "No-Show Eliminator",
     description:
-      "Scrapes prospect data, crafts personalized DMs using AI, and tracks replies — turns cold outreach into warm leads.",
-    tags: ["Python", "OpenAI", "Twitter API", "Airtable"],
-    gradient: "linear-gradient(135deg, #1a0a00 0%, #2d1500 50%, #1a0d00 100%)",
-    emoji: "💬",
-    status: "In Progress",
+      "Sends smart confirmation sequences before every appointment and auto-reschedules no-shows without any manual effort.",
+    tags: ["Twilio", "Calendly", "n8n", "OpenAI"],
+    gradient: "linear-gradient(135deg, #180000 0%, #2e0000 60%, #200005 100%)",
+    emoji: "🚫",
+    url: "/demo6",
+    accentColor: "#ef4444",
+    accentRgb: "239, 68, 68",
   },
   {
     id: 7,
-    title: "E-commerce Order Ops",
+    title: "Dead Lead Reviver",
     description:
-      "Automates order confirmations, shipping updates, review requests, and refund workflows end-to-end.",
-    tags: ["Shopify API", "Klaviyo", "n8n", "Slack"],
-    gradient: "linear-gradient(135deg, #001a1a 0%, #003333 50%, #001a2a 100%)",
-    emoji: "🛒",
-    status: "Live",
+      "Re-engages cold leads from your CRM with a personalized AI message sequence timed for when they're most likely to respond.",
+    tags: ["Claude API", "HubSpot", "Twilio", "Make.com"],
+    gradient: "linear-gradient(135deg, #150a00 0%, #261500 60%, #1a1000 100%)",
+    emoji: "💀",
+    url: "/demo7",
+    accentColor: "#f97316",
+    accentRgb: "249, 115, 22",
   },
   {
     id: 8,
-    title: "AI Document Processor",
+    title: "Open House Follow-Up",
     description:
-      "Extracts structured data from PDFs, contracts, and forms — then routes it to the right tool automatically.",
-    tags: ["Claude API", "Python", "Google Drive", "Webhooks"],
-    gradient: "linear-gradient(135deg, #1a1a00 0%, #2d2d00 50%, #1a1a0d 100%)",
-    emoji: "📄",
-    status: "In Progress",
+      "Captures sign-in data at your open house and immediately launches a personalized follow-up sequence for every attendee.",
+    tags: ["Airtable", "Twilio", "OpenAI", "Zapier"],
+    gradient: "linear-gradient(135deg, #000a18 0%, #00102e 60%, #000d22 100%)",
+    emoji: "🏠",
+    url: "/demo8",
+    accentColor: "#3b82f6",
+    accentRgb: "59, 130, 246",
   },
   {
     id: 9,
-    title: "Client Onboarding Flow",
+    title: "Seller Lead Nurture",
     description:
-      "Triggers contracts, welcome emails, project setup in Notion, and Slack channel creation the moment a deal closes.",
-    tags: ["HubSpot", "DocuSign", "Notion API", "Slack"],
-    gradient: "linear-gradient(135deg, #1a0d0d 0%, #2d1a1a 50%, #1a0d1a 100%)",
-    emoji: "🤝",
-    status: "Live",
+      "Long-term AI nurture sequence for seller leads — sends market updates, home value reports, and check-ins until they're ready to list.",
+    tags: ["n8n", "Claude API", "Gmail API", "HubSpot"],
+    gradient: "linear-gradient(135deg, #0a0018 0%, #150030 60%, #0d0020 100%)",
+    emoji: "📈",
+    url: "/demo9",
+    accentColor: "#a855f7",
+    accentRgb: "168, 85, 247",
   },
 ];
 
 function ProjectCard({ project }: { project: Project }) {
   const [hovered, setHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
 
   return (
     <div
+      ref={cardRef}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onMouseMove={handleMouseMove}
       style={{
-        background: "var(--bg-card)",
-        border: `1px solid ${hovered ? "var(--accent)" : "var(--border)"}`,
+        background: hovered
+          ? `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, rgba(${project.accentRgb}, 0.07) 0%, transparent 70%), var(--bg-card)`
+          : "var(--bg-card)",
+        border: `1px solid ${hovered ? project.accentColor : "var(--border)"}`,
         borderRadius: 16,
         overflow: "hidden",
         transition: "border-color 0.25s, box-shadow 0.25s, transform 0.25s",
         boxShadow: hovered
-          ? "0 0 30px rgba(57, 255, 110, 0.15), 0 8px 30px rgba(0,0,0,0.4)"
+          ? `0 0 30px rgba(${project.accentRgb}, 0.2), 0 8px 30px rgba(0,0,0,0.4)`
           : "0 2px 12px rgba(0,0,0,0.3)",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        cursor: "default",
+        transform: hovered ? "translateY(-5px) scale(1.01)" : "translateY(0) scale(1)",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      {/* Card image / gradient banner */}
+      {/* Banner */}
       <div
         style={{
-          height: 180,
+          height: 160,
           background: project.gradient,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: "3.5rem",
+          fontSize: "3rem",
           position: "relative",
           overflow: "hidden",
+          flexShrink: 0,
         }}
       >
-        <span style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))" }}>
+        {/* Glow orb behind emoji */}
+        <div
+          style={{
+            position: "absolute",
+            width: 100,
+            height: 100,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, rgba(${project.accentRgb}, 0.25) 0%, transparent 70%)`,
+            transition: "opacity 0.3s",
+            opacity: hovered ? 1 : 0.5,
+          }}
+        />
+        <span
+          style={{
+            filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
+            position: "relative",
+            zIndex: 1,
+            transition: "transform 0.3s",
+            transform: hovered ? "scale(1.15)" : "scale(1)",
+            display: "block",
+          }}
+        >
           {project.emoji}
         </span>
 
-        {/* Status badge */}
+        {/* Number badge */}
+        <div
+          style={{
+            position: "absolute",
+            top: 12,
+            left: 12,
+            width: 26,
+            height: 26,
+            borderRadius: "50%",
+            background: "rgba(0,0,0,0.5)",
+            border: `1px solid rgba(${project.accentRgb}, 0.4)`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "0.65rem",
+            fontWeight: 700,
+            color: project.accentColor,
+            fontFamily: "monospace",
+          }}
+        >
+          {String(project.id).padStart(2, "0")}
+        </div>
+
+        {/* Live badge */}
         <div
           style={{
             position: "absolute",
             top: 12,
             right: 12,
-            padding: "3px 10px",
+            padding: "3px 9px",
             borderRadius: 9999,
-            fontSize: "0.7rem",
+            fontSize: "0.65rem",
             fontWeight: 600,
             letterSpacing: "0.03em",
-            background:
-              project.status === "Live"
-                ? "rgba(57, 255, 110, 0.15)"
-                : "rgba(255, 200, 0, 0.15)",
-            color: project.status === "Live" ? "var(--accent)" : "#ffc800",
-            border: `1px solid ${
-              project.status === "Live"
-                ? "rgba(57, 255, 110, 0.3)"
-                : "rgba(255, 200, 0, 0.3)"
-            }`,
+            background: `rgba(${project.accentRgb}, 0.15)`,
+            color: project.accentColor,
+            border: `1px solid rgba(${project.accentRgb}, 0.35)`,
           }}
         >
-          {project.status === "Live" ? "● Live" : "◐ In Progress"}
+          ● Live
         </div>
       </div>
 
-      {/* Card content */}
-      <div style={{ padding: "20px" }}>
+      {/* Content */}
+      <div style={{ padding: "18px 20px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
         <h3
           style={{
             margin: "0 0 8px",
-            fontSize: "1rem",
+            fontSize: "0.975rem",
             fontWeight: 700,
             color: "var(--text-primary)",
             letterSpacing: "-0.01em",
@@ -185,22 +257,60 @@ function ProjectCard({ project }: { project: Project }) {
         <p
           style={{
             margin: "0 0 16px",
-            fontSize: "0.82rem",
+            fontSize: "0.8rem",
             color: "var(--text-muted)",
             lineHeight: 1.65,
+            flex: 1,
           }}
         >
           {project.description}
         </p>
 
         {/* Tags */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 16 }}>
           {project.tags.map((tag) => (
-            <span key={tag} className="tag">
+            <span
+              key={tag}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "2px 9px",
+                borderRadius: 9999,
+                fontSize: "0.68rem",
+                fontWeight: 500,
+                letterSpacing: "0.02em",
+                background: `rgba(${project.accentRgb}, 0.08)`,
+                color: project.accentColor,
+                border: `1px solid rgba(${project.accentRgb}, 0.2)`,
+              }}
+            >
               {tag}
             </span>
           ))}
         </div>
+
+        {/* View Demo link */}
+        <a
+          href={project.url}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "9px 14px",
+            borderRadius: 10,
+            border: `1px solid rgba(${project.accentRgb}, ${hovered ? "0.5" : "0.2"})`,
+            background: `rgba(${project.accentRgb}, ${hovered ? "0.12" : "0.05"})`,
+            color: project.accentColor,
+            textDecoration: "none",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            transition: "background 0.2s, border-color 0.2s",
+            letterSpacing: "0.01em",
+          }}
+        >
+          <span>View Demo</span>
+          <span style={{ fontSize: "1rem", transition: "transform 0.2s", transform: hovered ? "translateX(3px)" : "translateX(0)" }}>→</span>
+        </a>
       </div>
     </div>
   );
@@ -256,8 +366,8 @@ export default function Projects() {
             maxWidth: 500,
           }}
         >
-          Each project solves a real business problem — more leads, faster responses,
-          fewer manual tasks.
+          Each system solves a real real-estate problem — more replies, more booked calls,
+          fewer leads falling through the cracks.
         </p>
       </div>
 
