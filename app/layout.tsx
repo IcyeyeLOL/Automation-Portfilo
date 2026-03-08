@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body style={{ backgroundColor: "#0d0d0d", color: "#ffffff" }}>{children}</body>
     </html>
   );
 }
