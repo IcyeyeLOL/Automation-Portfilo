@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface Project {
   id: number;
@@ -317,12 +317,25 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export default function Projects() {
+  const [triggered, setTriggered] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setTriggered(true); observer.disconnect(); } },
+      { threshold: 0.06 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="projects"
       style={{
-        padding: "80px 24px",
-        maxWidth: 1200,
+        padding: "64px 28px",
+        maxWidth: 1100,
         margin: "0 auto",
       }}
     >
@@ -376,11 +389,20 @@ export default function Projects() {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 24,
+          gap: 22,
         }}
       >
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+        {projects.map((project, i) => (
+          <div
+            key={project.id}
+            style={{
+              opacity: triggered ? 1 : 0,
+              transform: triggered ? "translateY(0)" : "translateY(40px)",
+              transition: `opacity 0.65s cubic-bezier(0.16,1,0.3,1) ${i * 70}ms, transform 0.65s cubic-bezier(0.16,1,0.3,1) ${i * 70}ms`,
+            }}
+          >
+            <ProjectCard project={project} />
+          </div>
         ))}
       </div>
     </section>
