@@ -155,7 +155,7 @@ export default function Contact() {
             >
               <span style={{ color: ACCENT }}><EmailIcon /></span> Email me
             </a>
-            <a href="https://linkedin.com/in/olakunle-ajani" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.linkedin.com/in/olakunleajani/" target="_blank" rel="noopener noreferrer"
               style={{
                 flex: 1, display: "flex", alignItems: "center", gap: 8,
                 padding: "9px 12px", borderRadius: 10,
