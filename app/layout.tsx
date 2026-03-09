@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ backgroundColor: "#0d0d0d", colorScheme: "dark" }}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body style={{ backgroundColor: "#0d0d0d", color: "#ffffff" }}>{children}</body>
+      <body style={{ backgroundColor: "#0d0d0d", color: "#ffffff", fontFamily: "Inter, system-ui, sans-serif" }}>{children}</body>
     </html>
   );
 }

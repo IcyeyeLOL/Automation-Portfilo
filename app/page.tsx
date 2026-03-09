@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main style={{ background: "var(--bg-base)", minHeight: "100vh" }}>
+    <main style={{ background: "#0d0d0d", minHeight: "100vh" }}>
       <Background />
       <Navbar />
 
