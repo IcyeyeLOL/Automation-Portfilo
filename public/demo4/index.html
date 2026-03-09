@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Qualifier | Ajani Automation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+  .hero { text-align: center; padding: 70px 20px 50px; border-bottom: 1px solid #1a1a1a; }
+  .hero .tag { display: inline-block; background: #22c55e1a; color: #4ade80; border: 1px solid #22c55e44; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+  .hero h1 span { color: #4ade80; }
+  .hero p { font-size: 18px; color: #888; max-width: 540px; margin: 0 auto 36px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #1a1a1a; }
+  @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
+  .panel { background: #0d0d0d; padding: 32px 28px; }
+  .panel-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+  .panel.before .panel-label { color: #ef4444; }
+  .panel.after  .panel-label { color: #22c55e; }
+  .panel h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .panel p  { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+  .lead-list { display: flex; flex-direction: column; gap: 8px; }
+  .lead-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #111; border: 1px solid #1e1e1e; border-radius: 8px; font-size: 13px; }
+  .lead-avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .lead-name { flex: 1; font-weight: 600; color: #ccc; font-size: 12px; }
+  .lead-sub { font-size: 11px; color: #555; }
+  .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+  .badge.hot   { background: #22c55e1a; color: #4ade80; border: 1px solid #22c55e44; }
+  .badge.warm  { background: #f59e0b1a; color: #fbbf24; border: 1px solid #f59e0b44; }
+  .badge.cold  { background: #3b82f61a; color: #60a5fa; border: 1px solid #3b82f644; }
+  .badge.unkn  { background: #3333331a; color: #555;    border: 1px solid #33333344; }
+  .time-badge { font-size: 11px; color: #ef4444; }
+  .time-badge.ok { color: #22c55e; }
+
+  .demo-section { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+  .demo-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .demo-section > p { color: #666; margin-bottom: 36px; font-size: 15px; }
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #444; margin-bottom: 20px; }
+
+  .qualifier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+  @media (max-width: 700px) { .qualifier-grid { grid-template-columns: 1fr; } }
+
+  .raw-leads-panel { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; }
+  .raw-leads-panel h3 { font-size: 14px; font-weight: 700; color: #888; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; }
+  .raw-lead { padding: 10px 12px; border-bottom: 1px solid #1a1a1a; font-size: 13px; opacity: 0.5; transition: opacity 0.4s, border-color 0.4s; }
+  .raw-lead:last-child { border-bottom: none; }
+  .raw-lead.processing { opacity: 1; border-left: 2px solid #22c55e; padding-left: 10px; }
+  .raw-lead-name { font-weight: 600; color: #ccc; font-size: 12px; }
+  .raw-lead-text { color: #555; font-size: 11px; margin-top: 2px; }
+
+  .scored-panel { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; }
+  .scored-panel h3 { font-size: 11px; font-weight: 700; color: #888; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+  .scored-lead { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid #1a1a1a; opacity: 0; transform: translateX(10px); transition: opacity 0.4s, transform 0.4s; }
+  .scored-lead:last-child { border-bottom: none; }
+  .scored-lead.visible { opacity: 1; transform: translateX(0); }
+  .score-ring { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+  .score-ring.hot  { background: #22c55e22; border: 2px solid #22c55e; color: #4ade80; }
+  .score-ring.warm { background: #f59e0b22; border: 2px solid #f59e0b; color: #fbbf24; }
+  .score-ring.cold { background: #3b82f622; border: 2px solid #3b82f6; color: #60a5fa; }
+  .scored-info { flex: 1; }
+  .scored-name { font-weight: 600; font-size: 13px; color: #ddd; }
+  .scored-note { font-size: 12px; color: #666; margin-top: 2px; line-height: 1.4; }
+  .scored-action { font-size: 11px; margin-top: 6px; }
+  .action-hot  { color: #4ade80; }
+  .action-warm { color: #fbbf24; }
+  .action-cold { color: #60a5fa; }
+
+  .sms-alert { background: #051a0f; border: 1px solid #22c55e33; border-radius: 10px; padding: 16px; margin-top: 24px; opacity: 0; transition: opacity 0.5s; }
+  .sms-alert.visible { opacity: 1; }
+  .sms-alert-top { font-size: 11px; font-weight: 700; color: #4ade80; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .sms-text { font-size: 14px; color: #86efac; line-height: 1.7; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 50px 0 0; }
+  @media (max-width: 600px) { .stats { grid-template-columns: 1fr; } }
+  .stat-card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; text-align: center; }
+  .stat-card .num { font-size: 38px; font-weight: 800; color: #4ade80; line-height: 1; margin-bottom: 6px; }
+  .stat-card .stat-label { font-size: 13px; color: #666; }
+
+  .cta-section { text-align: center; padding: 60px 20px 80px; border-top: 1px solid #1a1a1a; }
+  .cta-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+  .cta-section p  { color: #666; margin-bottom: 32px; font-size: 15px; }
+  .btn { display: inline-block; background: #16a34a; color: #fff; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 8px; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn:hover { background: #15803d; }
+  .btn-ghost { display: inline-block; background: transparent; color: #888; font-size: 13px; padding: 10px 20px; border-radius: 8px; text-decoration: none; border: 1px solid #222; cursor: pointer; margin-left: 12px; }
+  .btn-ghost:hover { border-color: #444; color: #ccc; }
+
+  .play-wrap { text-align: center; margin-bottom: 40px; }
+  #playBtn { background: #16a34a; color: #fff; border: none; border-radius: 50px; padding: 14px 36px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+  #playBtn:hover { background: #15803d; transform: scale(1.02); }
+  #playBtn:disabled { background: #333; color: #666; cursor: default; transform: none; }
+  .progress-bar { height: 3px; background: #1a1a1a; border-radius: 3px; margin-bottom: 32px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #22c55e; width: 0%; transition: width 0.3s ease; }
+  .ticker { text-align: center; font-size: 13px; color: #555; margin-bottom: 28px; min-height: 20px; }
+  .ticker.active { color: #4ade80; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .pulsing { animation: pulse 1s infinite; }
+
+  .nav-bar { display: flex; justify-content: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap; }
+  .nav-bar a { font-size: 12px; color: #555; text-decoration: none; padding: 6px 14px; border: 1px solid #222; border-radius: 20px; transition: all 0.2s; }
+  .nav-bar a:hover { color: #ccc; border-color: #444; }
+  .nav-bar a.active { color: #4ade80; border-color: #22c55e44; background: #22c55e1a; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4" class="active">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
+  <a href="/demo6">6: No-Shows</a><a href="/demo7">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9">9: Seller Leads</a>
+</div>
+
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>Stop calling people<br>who were <span>never going to buy</span></h1>
+  <p>Every inquiry looks the same in your inbox. Here's how 50 raw leads get scored, ranked, and sorted — so you only call the ones worth calling.</p>
+</div>
+
+<div class="split">
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>50 leads. 4 hours. 2 real buyers.</h2>
+    <p>You call every single lead. Half don't pick up. A quarter were just browsing. You find 2 real buyers after a full afternoon of calls.</p>
+    <div class="lead-list">
+      <div class="lead-row">
+        <div class="lead-avatar" style="background:#1a2040;">JM</div>
+        <div><div class="lead-name">James M.</div><div class="lead-sub">Commercial inquiry — serious buyer</div></div>
+        <div class="time-badge">Called 3rd</div>
+      </div>
+      <div class="lead-row">
+        <div class="lead-avatar" style="background:#1a1a1a;">??</div>
+        <div><div class="lead-name">Anonymous form</div><div class="lead-sub">No details provided</div></div>
+        <div class="time-badge">Called 1st</div>
+      </div>
+      <div class="lead-row">
+        <div class="lead-avatar" style="background:#1a1a1a;">BR</div>
+        <div><div class="lead-name">B. Rodriguez</div><div class="lead-sub">"Just browsing" — no budget stated</div></div>
+        <div class="time-badge">Called 2nd</div>
+      </div>
+      <div class="lead-row">
+        <div class="lead-avatar" style="background:#1a3020;">SR</div>
+        <div><div class="lead-name">Sarah R.</div><div class="lead-sub">Specific address, budget, timeline</div></div>
+        <div class="time-badge">Called 8th 😬</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#ef44441a;border:1px solid #ef444433;border-radius:8px;font-size:13px;color:#fca5a5;">
+      ⚠️ Sarah — your hottest lead — waited 2 hours. She booked a showing with another agent at hour 1.
+    </div>
+  </div>
+
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>50 leads. Sorted in 3 minutes. Call 8.</h2>
+    <p>Every lead gets scored on intent, specificity, and urgency. HOT leads get instant replies and your phone buzzes. COLD leads go into a drip.</p>
+    <div class="lead-list">
+      <div class="lead-row" style="border-color:#22c55e44;">
+        <div class="lead-avatar" style="background:#051a0f;">SR</div>
+        <div><div class="lead-name">Sarah R.</div><div class="lead-sub">Score 94 — specific address, budget, timeline</div></div>
+        <div class="badge hot">HOT</div>
+      </div>
+      <div class="lead-row" style="border-color:#22c55e44;">
+        <div class="lead-avatar" style="background:#1a2040;">JM</div>
+        <div><div class="lead-name">James M.</div><div class="lead-sub">Score 87 — commercial, end-of-month urgency</div></div>
+        <div class="badge hot">HOT</div>
+      </div>
+      <div class="lead-row" style="border-color:#f59e0b44;">
+        <div class="lead-avatar" style="background:#1a1200;">DK</div>
+        <div><div class="lead-name">David K.</div><div class="lead-sub">Score 61 — browsing, no timeline</div></div>
+        <div class="badge warm">WARM</div>
+      </div>
+      <div class="lead-row">
+        <div class="lead-avatar" style="background:#1a1a1a;">BR</div>
+        <div><div class="lead-name">B. Rodriguez</div><div class="lead-sub">Score 24 — vague, no budget, no timeline</div></div>
+        <div class="badge cold">COLD</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">
+      ✅ Sarah got an instant reply in 47 seconds. James is second in queue. Cold leads get a drip — no wasted calls.
+    </div>
+  </div>
+</div>
+
+<div class="demo-section">
+  <div class="section-label">Watch 6 leads get scored in real time</div>
+  <h2>6 inquiries just came in. Watch them get sorted.</h2>
+  <p>Every lead is evaluated on 5 signals: specificity, urgency, budget clarity, source quality, and message length. HOT leads get your phone buzzing immediately.</p>
+
+  <div class="play-wrap">
+    <button id="playBtn" onclick="runDemo()">▶ Run Qualifier</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to qualify 6 leads.</div>
+
+  <div class="qualifier-grid">
+    <div class="raw-leads-panel">
+      <h3>📥 Raw Leads — Unscored</h3>
+      <div class="raw-lead" id="r1">
+        <div class="raw-lead-name">Sarah R.</div>
+        <div class="raw-lead-text">"Looking for 2BR at 412 Northview, budget $375k, need to move by April"</div>
+      </div>
+      <div class="raw-lead" id="r2">
+        <div class="raw-lead-name">James M.</div>
+        <div class="raw-lead-text">"Is 2847 Oak commercial space still available? Need 3k sqft by end of month"</div>
+      </div>
+      <div class="raw-lead" id="r3">
+        <div class="raw-lead-name">Anonymous</div>
+        <div class="raw-lead-text">"hi"</div>
+      </div>
+      <div class="raw-lead" id="r4">
+        <div class="raw-lead-name">David K.</div>
+        <div class="raw-lead-text">"Saw your listing. Interested maybe. Not sure on budget yet"</div>
+      </div>
+      <div class="raw-lead" id="r5">
+        <div class="raw-lead-name">Maria T.</div>
+        <div class="raw-lead-text">"Need to sell my current home and buy in Northside ASAP — relocating for work in 6 weeks"</div>
+      </div>
+      <div class="raw-lead" id="r6">
+        <div class="raw-lead-name">P. Williams</div>
+        <div class="raw-lead-text">"Just browsing, no rush"</div>
+      </div>
+    </div>
+
+    <div class="scored-panel">
+      <h3>🎯 Scored & Sorted</h3>
+      <div class="scored-lead" id="s1">
+        <div class="score-ring hot">94</div>
+        <div class="scored-info">
+          <div class="scored-name">Maria T.</div>
+          <div class="scored-note">Relocating in 6 weeks. Needs to buy AND sell. High urgency, dual transaction.</div>
+          <div class="scored-action action-hot">→ Replied in 38s. Your phone is buzzing.</div>
+        </div>
+      </div>
+      <div class="scored-lead" id="s2">
+        <div class="score-ring hot">91</div>
+        <div class="scored-info">
+          <div class="scored-name">Sarah R.</div>
+          <div class="scored-note">Specific address, budget stated, April timeline. Ready to move.</div>
+          <div class="scored-action action-hot">→ Replied in 47s. Showing request sent.</div>
+        </div>
+      </div>
+      <div class="scored-lead" id="s3">
+        <div class="score-ring hot">87</div>
+        <div class="scored-info">
+          <div class="scored-name">James M.</div>
+          <div class="scored-note">Commercial, specific space requirement, hard end-of-month deadline.</div>
+          <div class="scored-action action-hot">→ Replied in 52s. Call scheduled.</div>
+        </div>
+      </div>
+      <div class="scored-lead" id="s4">
+        <div class="score-ring warm">61</div>
+        <div class="scored-info">
+          <div class="scored-name">David K.</div>
+          <div class="scored-note">Interested but no budget or timeline. Needs nurturing.</div>
+          <div class="scored-action action-warm">→ Added to 7-day follow-up sequence.</div>
+        </div>
+      </div>
+      <div class="scored-lead" id="s5">
+        <div class="score-ring cold">18</div>
+        <div class="scored-info">
+          <div class="scored-name">P. Williams</div>
+          <div class="scored-note">Explicitly no urgency. Likely early research phase.</div>
+          <div class="scored-action action-cold">→ Monthly newsletter drip. No manual time spent.</div>
+        </div>
+      </div>
+      <div class="scored-lead" id="s6">
+        <div class="score-ring cold">4</div>
+        <div class="scored-info">
+          <div class="scored-name">Anonymous</div>
+          <div class="scored-note">No information provided. Single-word message.</div>
+          <div class="scored-action action-cold">→ Auto-replied with property list. Monitoring.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sms-alert" id="smsAlert">
+    <div class="sms-alert-top">📱 SMS Alert — Sent to your phone</div>
+    <div class="sms-text">🔥 3 HOT leads scored 85+:<br>
+      1. Maria T. (94) — relocating in 6 weeks, buy+sell<br>
+      2. Sarah R. (91) — 2BR Northview, April, $375k<br>
+      3. James M. (87) — commercial 3k sqft, end of month<br><br>
+      All replied automatically. Reply NOW while they're warm.
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num">3 min</div>
+      <div class="stat-label">To score and sort<br>50 leads</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">8</div>
+      <div class="stat-label">Calls worth making<br>out of 50 leads</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:#22c55e;">3.2×</div>
+      <div class="stat-label">More closings when<br>calling HOT leads first</div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <h2>Only call leads worth calling.</h2>
+  <p>We build the qualifier for your specific business. One setup call.</p>
+  <a href="mailto:olakunle@ajaniautomation.com?subject=Lead%20Qualifier%20Demo" class="btn">Book a Free Call</a>
+  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a>
+  <br><br>
+  <span style="color:#333;font-size:13px;">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+
+<script>
+  let running = false;
+  function runDemo() {
+    if (running) return;
+    running = true;
+    const btn = document.getElementById('playBtn');
+    const fill = document.getElementById('progressFill');
+    const tick = document.getElementById('ticker');
+    btn.disabled = true; btn.textContent = 'Qualifying...';
+    tick.className = 'ticker active pulsing';
+    document.querySelectorAll('.scored-lead').forEach(el => el.classList.remove('visible'));
+    document.getElementById('smsAlert').classList.remove('visible');
+    fill.style.width = '0%';
+
+    const rawOrder = ['r1','r2','r3','r4','r5','r6'];
+    const scoreOrder = [
+      {raw:'r5', score:'s1', delay:800,  progress:15, msg:'Maria T. — relocating in 6 weeks. Scoring...'},
+      {raw:'r1', score:'s2', delay:2000, progress:32, msg:'Sarah R. — specific address, budget, timeline. HOT.'},
+      {raw:'r2', score:'s3', delay:3200, progress:48, msg:'James M. — commercial, end-of-month deadline. HOT.'},
+      {raw:'r4', score:'s4', delay:4400, progress:63, msg:'David K. — interested, no timeline. WARM.'},
+      {raw:'r6', score:'s5', delay:5400, progress:78, msg:'P. Williams — no urgency. COLD. Added to drip.'},
+      {raw:'r3', score:'s6', delay:6200, progress:90, msg:'Anonymous — single word message. COLD.'},
+    ];
+
+    scoreOrder.forEach(({ raw, score, delay, progress, msg }) => {
+      setTimeout(() => {
+        document.getElementById(raw).classList.add('processing');
+        fill.style.width = progress + '%';
+        tick.textContent = msg;
+        setTimeout(() => {
+          document.getElementById(score).classList.add('visible');
+        }, 300);
+      }, delay);
+    });
+
+    setTimeout(() => {
+      document.getElementById('smsAlert').classList.add('visible');
+      fill.style.width = '100%';
+      tick.className = 'ticker';
+      tick.textContent = '6 leads qualified. 3 HOT replied automatically. You\'re only calling 3 people.';
+      btn.disabled = false; btn.textContent = '↺ Replay';
+      running = false;
+    }, 7800);
+  }
+</script>
+</body>
+</html>
+

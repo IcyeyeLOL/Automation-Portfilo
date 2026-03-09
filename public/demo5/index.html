@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Listing Blast | Ajani Automation</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+  .nav-bar{display:flex;justify-content:center;gap:8px;padding:14px 20px;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
+  .nav-bar a{font-size:11px;color:#555;text-decoration:none;padding:5px 12px;border:1px solid #222;border-radius:20px;transition:all .2s}
+  .nav-bar a:hover{color:#ccc;border-color:#444}
+  .nav-bar a.active{color:#22d3ee;border-color:#06b6d444;background:#06b6d41a}
+  .hero{text-align:center;padding:70px 20px 50px;border-bottom:1px solid #1a1a1a}
+  .tag{display:inline-block;background:#06b6d41a;color:#22d3ee;border:1px solid #06b6d444;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:16px}
+  .hero h1 span{color:#22d3ee}
+  .hero p{font-size:18px;color:#888;max-width:540px;margin:0 auto}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#1a1a1a}
+  @media(max-width:700px){.split{grid-template-columns:1fr}}
+  .panel{background:#0d0d0d;padding:32px 28px}
+  .panel-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px}
+  .panel.before .panel-label{color:#ef4444}
+  .panel.after .panel-label{color:#22c55e}
+  .panel h2{font-size:20px;font-weight:700;margin-bottom:8px}
+  .panel p{color:#666;font-size:14px;margin-bottom:20px}
+  .buyer-list{display:flex;flex-direction:column;gap:8px}
+  .buyer-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#111;border:1px solid #1e1e1e;border-radius:8px;font-size:12px}
+  .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+  .bname{flex:1;font-weight:600;color:#ccc}
+  .bsub{color:#555;font-size:11px}
+  .st-sent{color:#22c55e;font-size:11px}
+  .st-miss{color:#ef4444;font-size:11px}
+  .demo-section{max-width:860px;margin:0 auto;padding:60px 20px}
+  .demo-section h2{font-size:28px;font-weight:800;margin-bottom:8px}
+  .demo-section>p{color:#666;margin-bottom:36px;font-size:15px}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:20px}
+  .timeline{position:relative;padding-left:32px}
+  .timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:#1e1e1e}
+  .t-event{position:relative;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+  .t-event.visible{opacity:1;transform:translateY(0)}
+  .t-dot{position:absolute;left:-27px;top:14px;width:14px;height:14px;border-radius:50%;border:2px solid #333;background:#0a0a0a}
+  .t-event.visible .t-dot{border-color:#22d3ee;background:#22d3ee}
+  .t-event.success .t-dot{border-color:#22c55e;background:#22c55e}
+  .t-card{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px 16px;margin-bottom:10px;margin-left:4px}
+  .t-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  .t-time{font-size:11px;font-weight:700;color:#22d3ee;background:#06b6d41a;padding:2px 8px;border-radius:10px;white-space:nowrap}
+  .t-event.success .t-time{color:#22c55e;background:#22c55e1a}
+  .t-source{font-size:11px;color:#555;background:#161616;padding:2px 8px;border-radius:10px}
+  .t-title{font-weight:600;font-size:14px;color:#ddd;margin-bottom:6px}
+  .t-body{font-size:13px;color:#666}
+  .email-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:500px){.email-grid{grid-template-columns:1fr}}
+  .mini-email{background:#061212;border:1px solid #06b6d433;border-radius:8px;padding:10px 12px;font-size:12px}
+  .me-to{color:#555;font-size:11px;margin-bottom:4px}
+  .me-body{color:#888;line-height:1.5}
+  .me-badge{display:inline-block;background:#22c55e1a;color:#22c55e;border:1px solid #22c55e33;padding:2px 6px;border-radius:8px;font-size:10px;margin-top:6px}
+  .counter-box{background:#061212;border:1px solid #06b6d433;border-radius:10px;padding:20px;text-align:center;margin-top:16px}
+  .counter-num{font-size:48px;font-weight:800;color:#22d3ee;line-height:1}
+  .counter-label{color:#555;font-size:13px;margin-top:4px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:50px 0 0}
+  @media(max-width:600px){.stats{grid-template-columns:1fr}}
+  .stat-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:20px;text-align:center}
+  .stat-card .num{font-size:38px;font-weight:800;color:#22d3ee;line-height:1;margin-bottom:6px}
+  .stat-card .stat-label{font-size:13px;color:#666}
+  .cta-section{text-align:center;padding:60px 20px 80px;border-top:1px solid #1a1a1a}
+  .cta-section h2{font-size:28px;font-weight:800;margin-bottom:12px}
+  .cta-section p{color:#666;margin-bottom:32px;font-size:15px}
+  .btn{display:inline-block;background:#0891b2;color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:background .2s}
+  .btn:hover{background:#0e7490}
+  .btn-ghost{display:inline-block;background:transparent;color:#888;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none;border:1px solid #222;cursor:pointer;margin-left:12px}
+  .btn-ghost:hover{border-color:#444;color:#ccc}
+  .play-wrap{text-align:center;margin-bottom:40px}
+  #playBtn{background:#0891b2;color:#fff;border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s,transform .1s}
+  #playBtn:hover{background:#0e7490;transform:scale(1.02)}
+  #playBtn:disabled{background:#333;color:#666;cursor:default;transform:none}
+  .progress-bar{height:3px;background:#1a1a1a;border-radius:3px;margin-bottom:32px;overflow:hidden}
+  .progress-fill{height:100%;background:#22d3ee;width:0%;transition:width .3s}
+  .ticker{text-align:center;font-size:13px;color:#555;margin-bottom:28px;min-height:20px}
+  .ticker.active{color:#22d3ee}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .pulsing{animation:pulse 1s infinite}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4">4: Qualifier</a>
+  <a href="/demo5" class="active">5: Listing Blast</a><a href="/demo6">6: No-Shows</a><a href="/demo7">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9">9: Seller Leads</a>
+</div>
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>New listing live.<br><span>47 buyers notified in 90 seconds.</span></h1>
+  <p>Every agent has a buyer list. Almost none of them blast it the moment a new listing hits. Here's what happens when you do.</p>
+</div>
+<div class="split">
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>New listing. Nobody knows for 3 days.</h2>
+    <p>You list a property. You mean to email your buyer list. You get busy. Three days later you remember — two buyers already saw it with other agents.</p>
+    <div class="buyer-list">
+      <div class="buyer-row"><div class="av" style="background:#1a2040">JM</div><div><div class="bname">James M.</div><div class="bsub">Wants 3BR Northside, $400k max</div></div><div class="st-miss">Never notified</div></div>
+      <div class="buyer-row"><div class="av" style="background:#1a3020">SR</div><div><div class="bname">Sarah R.</div><div class="bsub">2BR, under $380k, April move</div></div><div class="st-miss">Never notified</div></div>
+      <div class="buyer-row"><div class="av" style="background:#1a1200">DK</div><div><div class="bname">David K.</div><div class="bsub">Flexible, $350-450k range</div></div><div class="st-miss">Never notified</div></div>
+      <div class="buyer-row"><div class="av" style="background:#1a1a1a">+44</div><div><div class="bname">44 more buyers</div><div class="bsub">All have matching criteria on file</div></div><div class="st-miss">Never notified</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#ef44441a;border:1px solid #ef444433;border-radius:8px;font-size:13px;color:#fca5a5;">⚠️ James found the listing on Zillow. Booked a showing through a different agent.</div>
+  </div>
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>Listed at 9am. 47 buyers notified by 9:02.</h2>
+    <p>The moment you mark a listing live, every buyer in your database with matching criteria gets a personalized email. Automatically. Instantly.</p>
+    <div class="buyer-list">
+      <div class="buyer-row" style="border-color:#22c55e44"><div class="av" style="background:#051a0f">SR</div><div><div class="bname">Sarah R.</div><div class="bsub">Match score 97% — replied in 4 min</div></div><div class="st-sent">✓ 9:01am</div></div>
+      <div class="buyer-row" style="border-color:#22c55e44"><div class="av" style="background:#1a2040">JM</div><div><div class="bname">James M.</div><div class="bsub">Match score 89% — opened, clicked</div></div><div class="st-sent">✓ 9:01am</div></div>
+      <div class="buyer-row" style="border-color:#22c55e44"><div class="av" style="background:#1a1200">DK</div><div><div class="bname">David K.</div><div class="bsub">Match score 74% — opened</div></div><div class="st-sent">✓ 9:02am</div></div>
+      <div class="buyer-row" style="border-color:#06b6d433"><div class="av" style="background:#061212">+44</div><div><div class="bname">44 more buyers</div><div class="bsub">All notified with personalized match</div></div><div class="st-sent">✓ 9:02am</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">✅ Sarah replied at 9:05am. Showing booked for Saturday. Your listing moves first.</div>
+  </div>
+</div>
+<div class="demo-section">
+  <div class="section-label">Watch the blast fire</div>
+  <h2>412 Northview just went live. Watch what happens.</h2>
+  <p>The moment you mark a listing active, the system scans your buyer database, matches criteria, personalizes each email, and blasts all 47 in under 2 minutes.</p>
+  <div class="play-wrap"><button id="playBtn" onclick="runDemo()">▶ Fire the Blast</button></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to fire the listing blast.</div>
+  <div class="timeline" id="timeline">
+    <div class="t-event" id="e1"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">9:00:00am</div><div class="t-source">MLS / Manual trigger</div></div>
+      <div class="t-title">412 Northview Drive marked ACTIVE</div>
+      <div class="t-body">3BR · 2BA · $369,000 · Renovated kitchen · Northside district · Available immediately</div>
+    </div></div>
+    <div class="t-event" id="e2"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">9:00:03am</div><div class="t-source">Buyer database scan</div></div>
+      <div class="t-title">Database scanned — 47 matching buyers found</div>
+      <div class="t-body">Criteria matched: price range, bedrooms, location, timeline. 47 of 312 buyers qualify. Personalizing emails...</div>
+    </div></div>
+    <div class="t-event success" id="e3"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">9:01:12am</div><div class="t-source">Email blast · 47 sent</div></div>
+      <div class="t-title">47 personalized emails delivered</div>
+      <div class="email-grid">
+        <div class="mini-email"><div class="me-to">To: sarah.r@gmail.com</div><div class="me-body">"Sarah — a 3BR just listed in Northside at $369k, right in your range. Newly renovated kitchen. This one matches everything you told me."</div><div class="me-badge">✓ Opened 9:05am</div></div>
+        <div class="mini-email"><div class="me-to">To: james.m@email.com</div><div class="me-body">"James — 412 Northview just hit the market. 3BR, $369k, Northside. Based on what you're looking for, this is worth a look."</div><div class="me-badge">✓ Opened 9:08am</div></div>
+      </div>
+      <div class="counter-box"><div class="counter-num" id="counter">0</div><div class="counter-label">emails delivered</div></div>
+    </div></div>
+    <div class="t-event success" id="e4"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">9:05am</div><div class="t-source">Sarah R. replies</div></div>
+      <div class="t-title">First showing request — 5 minutes after listing</div>
+      <div class="t-body" style="color:#aaa">"This looks perfect! Can we do Saturday morning? We've been looking for exactly this in Northside."</div>
+    </div></div>
+    <div class="t-event success" id="e5"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">9:31am</div><div class="t-source">Dashboard</div></div>
+      <div class="t-title">Blast results — 31 minutes after going live</div>
+      <div class="t-body">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;font-size:12px;text-align:center;margin-top:4px">
+          <div><div style="font-size:22px;font-weight:800;color:#22d3ee">47</div><div style="color:#555">Sent</div></div>
+          <div><div style="font-size:22px;font-weight:800;color:#22c55e">31</div><div style="color:#555">Opened</div></div>
+          <div><div style="font-size:22px;font-weight:800;color:#fbbf24">4</div><div style="color:#555">Showing requests</div></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="num">90s</div><div class="stat-label">To notify 47 buyers<br>after a listing goes live</div></div>
+    <div class="stat-card"><div class="num">4</div><div class="stat-label">Showing requests<br>in the first hour</div></div>
+    <div class="stat-card"><div class="num" style="color:#22c55e">0</div><div class="stat-label">Minutes spent<br>sending emails</div></div>
+  </div>
+</div>
+<div class="cta-section">
+  <h2>Your next listing deserves a full room.</h2>
+  <p>We build the blast system for you. One setup call.</p>
+  <a href="mailto:olakunle@ajaniautomation.com?subject=Listing+Blast+Demo" class="btn">Book a Free Call</a>
+  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a><br><br>
+  <span style="color:#333;font-size:13px">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+<script>
+  let running=false;
+  function runDemo(){
+    if(running)return;running=true;
+    const btn=document.getElementById('playBtn'),fill=document.getElementById('progressFill'),tick=document.getElementById('ticker');
+    btn.disabled=true;btn.textContent='Firing...';tick.className='ticker active pulsing';
+    document.querySelectorAll('.t-event').forEach(el=>el.classList.remove('visible'));
+    fill.style.width='0%';
+    const events=[
+      {id:'e1',delay:500,progress:15,msg:'412 Northview marked active...'},
+      {id:'e2',delay:2000,progress:35,msg:'Scanning 312 buyers for matches...'},
+      {id:'e3',delay:3500,progress:65,msg:'47 personalized emails firing...'},
+      {id:'e4',delay:6000,progress:82,msg:'Sarah replied — showing request received!'},
+      {id:'e5',delay:8000,progress:100,msg:'31 opened. 4 showing requests. 0 minutes of your time.'},
+    ];
+    events.forEach(({id,delay,progress,msg})=>{
+      setTimeout(()=>{
+        document.getElementById(id).classList.add('visible');
+        fill.style.width=progress+'%';tick.textContent=msg;
+        if(id==='e3'){let c=0;const iv=setInterval(()=>{c+=3;document.getElementById('counter').textContent=c;if(c>=47){clearInterval(iv);document.getElementById('counter').textContent=47;}},60);}
+        if(progress===100){tick.className='ticker';btn.disabled=false;btn.textContent='↺ Replay';running=false;}
+      },delay);
+    });
+  }
+</script>
+</body>
+</html>

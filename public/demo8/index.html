@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open House Follow-Up | Ajani Automation</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+  .nav-bar{display:flex;justify-content:center;gap:8px;padding:14px 20px;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
+  .nav-bar a{font-size:11px;color:#555;text-decoration:none;padding:5px 12px;border:1px solid #222;border-radius:20px;transition:all .2s}
+  .nav-bar a:hover{color:#ccc;border-color:#444}
+  .nav-bar a.active{color:#60a5fa;border-color:#3b82f644;background:#3b82f61a}
+  .hero{text-align:center;padding:70px 20px 50px;border-bottom:1px solid #1a1a1a}
+  .tag{display:inline-block;background:#3b82f61a;color:#60a5fa;border:1px solid #3b82f644;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:16px}
+  .hero h1 span{color:#60a5fa}
+  .hero p{font-size:18px;color:#888;max-width:540px;margin:0 auto}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#1a1a1a}
+  @media(max-width:700px){.split{grid-template-columns:1fr}}
+  .panel{background:#0d0d0d;padding:32px 28px}
+  .panel-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px}
+  .panel.before .panel-label{color:#ef4444}
+  .panel.after .panel-label{color:#22c55e}
+  .panel h2{font-size:20px;font-weight:700;margin-bottom:8px}
+  .panel p{color:#666;font-size:14px;margin-bottom:20px}
+  .signin-list{display:flex;flex-direction:column;gap:8px}
+  .signin-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#111;border:1px solid #1e1e1e;border-radius:8px;font-size:12px}
+  .av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+  .sn{flex:1;font-weight:600;color:#ccc}
+  .ss{font-size:11px}
+  .st-done{color:#22c55e}.st-miss{color:#ef4444}
+  .demo-section{max-width:860px;margin:0 auto;padding:60px 20px}
+  .demo-section h2{font-size:28px;font-weight:800;margin-bottom:8px}
+  .demo-section>p{color:#666;margin-bottom:36px;font-size:15px}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:20px}
+  .timeline{position:relative;padding-left:32px}
+  .timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:#1e1e1e}
+  .t-event{position:relative;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+  .t-event.visible{opacity:1;transform:translateY(0)}
+  .t-dot{position:absolute;left:-27px;top:14px;width:14px;height:14px;border-radius:50%;border:2px solid #333;background:#0a0a0a}
+  .t-event.visible .t-dot{border-color:#60a5fa;background:#60a5fa}
+  .t-event.ok .t-dot{border-color:#22c55e;background:#22c55e}
+  .t-card{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px 16px;margin-bottom:10px;margin-left:4px}
+  .t-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  .t-time{font-size:11px;font-weight:700;color:#60a5fa;background:#3b82f61a;padding:2px 8px;border-radius:10px;white-space:nowrap}
+  .t-event.ok .t-time{color:#22c55e;background:#22c55e1a}
+  .t-source{font-size:11px;color:#555;background:#161616;padding:2px 8px;border-radius:10px}
+  .t-title{font-weight:600;font-size:14px;color:#ddd;margin-bottom:6px}
+  .t-body{font-size:13px;color:#666}
+  .sheet{background:#060c1a;border:1px solid #3b82f633;border-radius:10px;padding:14px;font-size:12px}
+  .sheet-header{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;color:#555;font-size:11px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #1a1a2e}
+  .sheet-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:6px 0;border-bottom:1px solid #0d1220;font-size:12px}
+  .sheet-row:last-child{border-bottom:none}
+  .email-mini{background:#060c1a;border:1px solid #3b82f633;border-radius:8px;padding:12px;font-size:12px;margin-top:8px}
+  .em-to{color:#555;font-size:11px;margin-bottom:4px}
+  .em-body{color:#888;line-height:1.5}
+  .em-badge{display:inline-block;background:#22c55e1a;color:#22c55e;border:1px solid #22c55e33;padding:2px 8px;border-radius:8px;font-size:10px;margin-top:6px}
+  .multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:500px){.multi-grid{grid-template-columns:1fr}}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:50px 0 0}
+  @media(max-width:600px){.stats{grid-template-columns:1fr}}
+  .stat-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:20px;text-align:center}
+  .stat-card .num{font-size:38px;font-weight:800;color:#60a5fa;line-height:1;margin-bottom:6px}
+  .stat-card .stat-label{font-size:13px;color:#666}
+  .cta-section{text-align:center;padding:60px 20px 80px;border-top:1px solid #1a1a1a}
+  .cta-section h2{font-size:28px;font-weight:800;margin-bottom:12px}
+  .cta-section p{color:#666;margin-bottom:32px;font-size:15px}
+  .btn{display:inline-block;background:#2563eb;color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;text-decoration:none}
+  .btn:hover{background:#1d4ed8}
+  .btn-ghost{display:inline-block;background:transparent;color:#888;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none;border:1px solid #222;margin-left:12px}
+  .play-wrap{text-align:center;margin-bottom:40px}
+  #playBtn{background:#2563eb;color:#fff;border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer}
+  #playBtn:hover{background:#1d4ed8}
+  #playBtn:disabled{background:#333;color:#666;cursor:default}
+  .progress-bar{height:3px;background:#1a1a1a;border-radius:3px;margin-bottom:32px;overflow:hidden}
+  .progress-fill{height:100%;background:#60a5fa;width:0%;transition:width .3s}
+  .ticker{text-align:center;font-size:13px;color:#555;margin-bottom:28px;min-height:20px}
+  .ticker.active{color:#60a5fa}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .pulsing{animation:pulse 1s infinite}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
+  <a href="/demo6">6: No-Shows</a><a href="/demo7">7: Dead Leads</a><a href="/demo8" class="active">8: Open House</a><a href="/demo9">9: Seller Leads</a>
+</div>
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>24 people walked through.<br><span>0 got a follow-up.</span></h1>
+  <p>Open houses fill a sign-in sheet and nothing else. Here's how every visitor gets a personalized follow-up within 1 hour of leaving — automatically.</p>
+</div>
+<div class="split">
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>Great open house. Zero follow-through.</h2>
+    <p>You collected 24 names. You meant to email them Sunday night. Then Monday happened. By Wednesday you've lost the moment entirely.</p>
+    <div class="signin-list">
+      <div class="signin-row"><div class="av" style="background:#1a2040">SR</div><div class="sn">Sarah R. — loved the kitchen</div><div class="ss st-miss">Never followed up</div></div>
+      <div class="signin-row"><div class="av" style="background:#1a1200">DK</div><div class="sn">David K. — asked about schools</div><div class="ss st-miss">Never followed up</div></div>
+      <div class="signin-row"><div class="av" style="background:#1a1a1a">MT</div><div class="sn">Maria T. — relocating, serious</div><div class="ss st-miss">Never followed up</div></div>
+      <div class="signin-row"><div class="av" style="background:#111">+21</div><div class="sn">21 more visitors</div><div class="ss st-miss">Sign-in sheet in your car</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#ef44441a;border:1px solid #ef444433;border-radius:8px;font-size:13px;color:#fca5a5;">⚠️ Maria was relocating and ready to buy. She found another agent by Tuesday.</div>
+  </div>
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>Sign-in sheet → personalized follow-up in 1 hour.</h2>
+    <p>Visitors fill a digital sign-in on an iPad. The moment they sign, they're in the sequence. Personalized email in under an hour, follow-up sequence for 7 days.</p>
+    <div class="signin-list">
+      <div class="signin-row" style="border-color:#22c55e44"><div class="av" style="background:#051a0f">SR</div><div class="sn">Sarah R.</div><div class="ss st-done">Emailed 1:12pm ✓</div></div>
+      <div class="signin-row" style="border-color:#22c55e44"><div class="av" style="background:#1a1200">DK</div><div class="sn">David K.</div><div class="ss st-done">Emailed 1:14pm ✓</div></div>
+      <div class="signin-row" style="border-color:#22c55e44"><div class="av" style="background:#051a0f">MT</div><div class="sn">Maria T.</div><div class="ss st-done">Emailed 1:18pm ✓</div></div>
+      <div class="signin-row" style="border-color:#3b82f644"><div class="av" style="background:#060c1a">+21</div><div class="sn">21 more visitors</div><div class="ss" style="color:#60a5fa">All emailed by 2pm ✓</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">✅ Maria replied same day. Showing scheduled for Monday. You were still at the open house when she booked.</div>
+  </div>
+</div>
+<div class="demo-section">
+  <div class="section-label">Watch the open house sequence fire</div>
+  <h2>Open house ends at 1pm. Watch all 24 visitors get followed up by 2pm.</h2>
+  <p>Digital sign-in on an iPad. Every visitor triggers an instant personalized sequence — no manual work, no lost leads, no forgotten sign-in sheets.</p>
+  <div class="play-wrap"><button id="playBtn" onclick="runDemo()">▶ End the Open House</button></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to run the open house follow-up.</div>
+  <div class="timeline">
+    <div class="t-event" id="e1"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">1:00pm · Open house ends</div><div class="t-source">iPad sign-in</div></div>
+      <div class="t-title">24 visitors signed in digitally during the open house</div>
+      <div class="sheet">
+        <div class="sheet-header"><span>Name</span><span>Email</span><span>Note</span></div>
+        <div class="sheet-row"><span style="color:#aaa">Sarah R.</span><span style="color:#555">sarah.r@…</span><span style="color:#555">"loved kitchen"</span></div>
+        <div class="sheet-row"><span style="color:#aaa">David K.</span><span style="color:#555">david.k@…</span><span style="color:#555">"asked about schools"</span></div>
+        <div class="sheet-row"><span style="color:#aaa">Maria T.</span><span style="color:#555">maria.t@…</span><span style="color:#555">"relocating, serious"</span></div>
+        <div class="sheet-row"><span style="color:#555">+ 21 more</span><span style="color:#444">…</span><span style="color:#444">…</span></div>
+      </div>
+    </div></div>
+    <div class="t-event" id="e2"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">1:03pm</div><div class="t-source">Sequence triggered</div></div>
+      <div class="t-title">24 personalized follow-ups queued and firing</div>
+      <div class="multi-grid">
+        <div class="email-mini">
+          <div class="em-to">To: Sarah R.</div>
+          <div class="em-body">"Sarah — great to meet you today at Northview! The kitchen you loved was just renovated in 2024. Happy to send the full spec sheet if you're interested."</div>
+          <div class="em-badge">✓ Sent 1:12pm</div>
+        </div>
+        <div class="email-mini">
+          <div class="em-to">To: Maria T.</div>
+          <div class="em-body">"Maria — thanks for stopping by! Since you mentioned relocating, I pulled 3 other listings in the area that might fit your timeline. Want me to send them over?"</div>
+          <div class="em-badge">✓ Sent 1:18pm</div>
+        </div>
+      </div>
+    </div></div>
+    <div class="t-event ok" id="e3"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">1:44pm</div><div class="t-source">Maria T. replies</div></div>
+      <div class="t-title">Maria replies — 44 minutes after the open house ended</div>
+      <div class="t-body" style="color:#aaa;margin-top:4px">"Yes please! We need to close by end of next month. Can we schedule a private showing this week?"</div>
+      <div style="margin-top:10px;padding:8px 12px;background:#16653122;border-radius:6px;font-size:12px;color:#86efac">Showing booked Monday 10am. You were driving home from the open house when this came in.</div>
+    </div></div>
+    <div class="t-event ok" id="e4"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 3 · Auto</div><div class="t-source">7-day sequence</div></div>
+      <div class="t-title">Visitors who didn't reply get Day 3 follow-up</div>
+      <div class="t-body">Sarah and 15 others get a "still thinking about it?" email with 2 new similar listings. 4 more reply over the next week.</div>
+    </div></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="num">1hr</div><div class="stat-label">To follow up all 24<br>open house visitors</div></div>
+    <div class="stat-card"><div class="num">0</div><div class="stat-label">Sign-in sheets lost<br>in the back of your car</div></div>
+    <div class="stat-card"><div class="num" style="color:#22c55e">4+</div><div class="stat-label">New conversations started<br>from 1 open house</div></div>
+  </div>
+</div>
+<div class="cta-section">
+  <h2>Every open house should fill your pipeline.</h2>
+  <p>iPad sign-in, instant follow-up, 7-day sequence. One setup call.</p>
+  <a href="mailto:olakunle@ajaniautomation.com?subject=Open+House+Demo" class="btn">Book a Free Call</a>
+  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a><br><br>
+  <span style="color:#333;font-size:13px">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+<script>
+  let running=false;
+  function runDemo(){
+    if(running)return;running=true;
+    const btn=document.getElementById('playBtn'),fill=document.getElementById('progressFill'),tick=document.getElementById('ticker');
+    btn.disabled=true;btn.textContent='Running...';tick.className='ticker active pulsing';
+    document.querySelectorAll('.t-event').forEach(el=>el.classList.remove('visible'));fill.style.width='0%';
+    [{id:'e1',delay:500,p:20,msg:'Open house ended. 24 sign-ins collected.'},{id:'e2',delay:2500,p:50,msg:'24 personalized emails firing...'},{id:'e3',delay:5000,p:78,msg:'Maria replied in 44 minutes. Showing booked!'},{id:'e4',delay:7000,p:100,msg:'4 more replies over 7 days. 1 open house = full pipeline.'}]
+    .forEach(({id,delay,p,msg})=>setTimeout(()=>{document.getElementById(id).classList.add('visible');fill.style.width=p+'%';tick.textContent=msg;if(p===100){tick.className='ticker';btn.disabled=false;btn.textContent='↺ Replay';running=false;}},delay));
+  }
+</script>
+</body>
+</html>

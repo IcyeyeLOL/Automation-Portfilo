@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 7-Day Follow-Up Machine | Ajani Automation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+  .hero { text-align: center; padding: 70px 20px 50px; border-bottom: 1px solid #1a1a1a; }
+  .hero .tag { display: inline-block; background: #6366f11a; color: #818cf8; border: 1px solid #6366f144; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+  .hero h1 span { color: #818cf8; }
+  .hero p { font-size: 18px; color: #888; max-width: 540px; margin: 0 auto 36px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #1a1a1a; }
+  @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
+  .panel { background: #0d0d0d; padding: 32px 28px; }
+  .panel-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+  .panel.before .panel-label { color: #ef4444; }
+  .panel.after  .panel-label { color: #22c55e; }
+  .panel h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .panel p  { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+  .drip { display: flex; flex-direction: column; gap: 8px; }
+  .drip-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #111; border: 1px solid #1e1e1e; border-radius: 8px; font-size: 13px; }
+  .drip-day { font-size: 11px; font-weight: 700; color: #555; background: #161616; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+  .drip-text { flex: 1; color: #666; }
+  .drip-status { font-size: 11px; }
+  .status-skip { color: #ef4444; }
+  .status-ok   { color: #22c55e; }
+
+  .demo-section { max-width: 860px; margin: 0 auto; padding: 60px 20px; }
+  .demo-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .demo-section > p { color: #666; margin-bottom: 36px; font-size: 15px; }
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #444; margin-bottom: 20px; }
+
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 2px; background: #1e1e1e; }
+  .t-event { position: relative; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .t-event.visible { opacity: 1; transform: translateY(0); }
+  .t-dot { position: absolute; left: -27px; top: 14px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #333; background: #0a0a0a; }
+  .t-event.visible .t-dot { border-color: #818cf8; background: #818cf8; }
+  .t-event.success .t-dot { border-color: #22c55e; background: #22c55e; }
+  .t-event.warn    .t-dot { border-color: #f59e0b; background: #f59e0b; }
+  .t-card { background: #111; border: 1px solid #1e1e1e; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; margin-left: 4px; }
+  .t-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .t-time { font-size: 11px; font-weight: 700; color: #818cf8; background: #6366f11a; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .t-event.success .t-time { color: #22c55e; background: #22c55e1a; }
+  .t-event.warn    .t-time { color: #f59e0b; background: #f59e0b1a; }
+  .t-source { font-size: 11px; color: #555; background: #161616; padding: 2px 8px; border-radius: 10px; }
+  .t-title { font-weight: 600; font-size: 14px; color: #ddd; margin-bottom: 6px; }
+  .t-body  { font-size: 13px; color: #666; }
+
+  .email-preview { background: #0f0f1a; border: 1px solid #2a2a4a; border-radius: 8px; padding: 14px; font-size: 13px; }
+  .email-header { border-bottom: 1px solid #1a1a2e; padding-bottom: 10px; margin-bottom: 10px; }
+  .email-field { display: flex; gap: 8px; margin-bottom: 4px; font-size: 12px; }
+  .email-field span:first-child { color: #555; width: 40px; flex-shrink: 0; }
+  .email-field span:last-child { color: #aaa; }
+  .email-body { color: #888; line-height: 1.6; }
+  .open-badge { display: inline-block; background: #22c55e1a; color: #22c55e; border: 1px solid #22c55e33; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-top: 8px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 50px 0 0; }
+  @media (max-width: 600px) { .stats { grid-template-columns: 1fr; } }
+  .stat-card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; text-align: center; }
+  .stat-card .num { font-size: 38px; font-weight: 800; color: #818cf8; line-height: 1; margin-bottom: 6px; }
+  .stat-card .stat-label { font-size: 13px; color: #666; }
+
+  .cta-section { text-align: center; padding: 60px 20px 80px; border-top: 1px solid #1a1a1a; }
+  .cta-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+  .cta-section p  { color: #666; margin-bottom: 32px; font-size: 15px; }
+  .btn { display: inline-block; background: #6366f1; color: #fff; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 8px; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn:hover { background: #4f46e5; }
+  .btn-ghost { display: inline-block; background: transparent; color: #888; font-size: 13px; padding: 10px 20px; border-radius: 8px; text-decoration: none; border: 1px solid #222; cursor: pointer; margin-left: 12px; transition: border-color 0.2s, color 0.2s; }
+  .btn-ghost:hover { border-color: #444; color: #ccc; }
+
+  .play-wrap { text-align: center; margin-bottom: 40px; }
+  #playBtn { background: #6366f1; color: #fff; border: none; border-radius: 50px; padding: 14px 36px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+  #playBtn:hover { background: #4f46e5; transform: scale(1.02); }
+  #playBtn:disabled { background: #333; color: #666; cursor: default; transform: none; }
+  .progress-bar { height: 3px; background: #1a1a1a; border-radius: 3px; margin-bottom: 32px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #6366f1; width: 0%; transition: width 0.3s ease; }
+  .ticker { text-align: center; font-size: 13px; color: #555; margin-bottom: 28px; min-height: 20px; }
+  .ticker.active { color: #818cf8; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.4 } }
+  .pulsing { animation: pulse 1s infinite; }
+
+  .nav-bar { display: flex; justify-content: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap; }
+  .nav-bar a { font-size: 12px; color: #555; text-decoration: none; padding: 6px 14px; border: 1px solid #222; border-radius: 20px; transition: all 0.2s; }
+  .nav-bar a:hover { color: #ccc; border-color: #444; }
+  .nav-bar a.active { color: #818cf8; border-color: #6366f144; background: #6366f11a; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2" class="active">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
+  <a href="/demo6">6: No-Shows</a><a href="/demo7">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9">9: Seller Leads</a>
+</div>
+
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>Most deals die on<br><span>day 3 of silence</span></h1>
+  <p>68% of agents follow up once and give up. Here's what a 7-day automated follow-up sequence looks like — running while you sleep.</p>
+</div>
+
+<div class="split">
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>Followed up once. Never again.</h2>
+    <p>You emailed them on day 1. They didn't reply. You got busy. 7 days later they signed with someone else who sent 3 emails.</p>
+    <div class="drip">
+      <div class="drip-item">
+        <div class="drip-day">Day 1</div>
+        <div class="drip-text">Initial reply sent manually</div>
+        <div class="drip-status status-ok">✓ Sent</div>
+      </div>
+      <div class="drip-item">
+        <div class="drip-day">Day 3</div>
+        <div class="drip-text">Should follow up... forgot</div>
+        <div class="drip-status status-skip">✗ Missed</div>
+      </div>
+      <div class="drip-item">
+        <div class="drip-day">Day 5</div>
+        <div class="drip-text">Would've been a warm check-in</div>
+        <div class="drip-status status-skip">✗ Missed</div>
+      </div>
+      <div class="drip-item">
+        <div class="drip-day">Day 7</div>
+        <div class="drip-text">Last-chance touchpoint</div>
+        <div class="drip-status status-skip">✗ Missed</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#ef44441a;border:1px solid #ef444433;border-radius:8px;font-size:13px;color:#fca5a5;">
+      ⚠️ Lead went cold. Signed with another agent on day 6.
+    </div>
+  </div>
+
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>4 touchpoints. Zero effort.</h2>
+    <p>Set it up once. Every new lead gets a full 7-day sequence, automatically spaced and personalized. Stops the moment they reply.</p>
+    <div class="drip">
+      <div class="drip-item">
+        <div class="drip-day">Day 1</div>
+        <div class="drip-text">Instant reply — property details, availability</div>
+        <div class="drip-status status-ok">✓ Auto</div>
+      </div>
+      <div class="drip-item">
+        <div class="drip-day">Day 3</div>
+        <div class="drip-text">Warm check-in — "Still looking? I have 2 new listings"</div>
+        <div class="drip-status status-ok">✓ Auto</div>
+      </div>
+      <div class="drip-item">
+        <div class="drip-day">Day 5</div>
+        <div class="drip-text">Value add — market update relevant to their search</div>
+        <div class="drip-status status-ok">✓ Auto</div>
+      </div>
+      <div class="drip-item">
+        <div class="drip-day">Day 7</div>
+        <div class="drip-text">Last chance — "Happy to answer any questions"</div>
+        <div class="drip-status status-ok">✓ Auto</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">
+      ✅ Lead replied on day 5. Showing booked. Your time spent: 0 minutes.
+    </div>
+  </div>
+</div>
+
+<div class="demo-section">
+  <div class="section-label">Watch the sequence run</div>
+  <h2>Sarah went silent after day 1. Watch what happens next.</h2>
+  <p>She inquired about a 2BR listing, didn't reply to the first email. Here's her full 7-day sequence — all sent automatically.</p>
+
+  <div class="play-wrap">
+    <button id="playBtn" onclick="runDemo()">▶ Play Sequence</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to run the 7-day sequence.</div>
+
+  <div class="timeline" id="timeline">
+
+    <div class="t-event" id="e1">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 1 · 9:47am</div><div class="t-source">Website form</div></div>
+        <div class="t-title">Sarah submits inquiry</div>
+        <div class="email-preview">
+          <div class="email-header">
+            <div class="email-field"><span>From:</span><span>sarah.r@gmail.com</span></div>
+            <div class="email-field"><span>Subj:</span><span>Interested in 412 Northview Drive</span></div>
+          </div>
+          <div class="email-body">"Hi, I'm looking at the 2BR on Northview. Is it still available? Budget is around $375k."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-event success" id="e2">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 1 · 9:48am</div><div class="t-source">Auto-reply · Email</div></div>
+        <div class="t-title">Instant personalized reply sent</div>
+        <div class="email-preview">
+          <div class="email-header">
+            <div class="email-field"><span>To:</span><span>sarah.r@gmail.com</span></div>
+            <div class="email-field"><span>Subj:</span><span>Re: 412 Northview — Yes, it's available!</span></div>
+          </div>
+          <div class="email-body">"Hi Sarah! Great news — 412 Northview is still available at $369k, well within your range. It has a newly renovated kitchen and a private backyard. I have Saturday 11am or Sunday 2pm open for a private showing. Which works?"</div>
+          <div class="open-badge">✓ Delivered</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-event warn" id="e3">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 3 · 10:00am</div><div class="t-source">No reply detected</div></div>
+        <div class="t-title">Sarah hasn't responded — Day 3 follow-up triggers</div>
+        <div class="email-preview">
+          <div class="email-header">
+            <div class="email-field"><span>To:</span><span>sarah.r@gmail.com</span></div>
+            <div class="email-field"><span>Subj:</span><span>Still thinking about Northview?</span></div>
+          </div>
+          <div class="email-body">"Hey Sarah — just checking in on 412 Northview. I also have 2 similar listings that just came up in the same area under $380k. Want me to send those over?"</div>
+          <div class="open-badge">✓ Opened · 3:12pm</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-event success" id="e4">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 5 · 10:00am</div><div class="t-source">Auto · Email</div></div>
+        <div class="t-title">Day 5 — Value-add market update</div>
+        <div class="email-preview">
+          <div class="email-header">
+            <div class="email-field"><span>To:</span><span>sarah.r@gmail.com</span></div>
+            <div class="email-field"><span>Subj:</span><span>Quick update on Northside market</span></div>
+          </div>
+          <div class="email-body">"Sarah — homes in the Northside area are moving fast right now (avg 11 days on market). Thought you'd want to know before Northview goes. Happy to answer any questions."</div>
+          <div class="open-badge">✓ Opened · Replied 2:44pm</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-event success" id="e5">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 5 · 2:44pm</div><div class="t-source">Sequence stopped</div></div>
+        <div class="t-title">Sarah replies — sequence paused automatically</div>
+        <div class="email-preview">
+          <div class="email-header">
+            <div class="email-field"><span>From:</span><span>sarah.r@gmail.com</span></div>
+          </div>
+          <div class="email-body">"Sorry for the delay! Yes I'm still interested. Can we do Saturday 11am?"</div>
+        </div>
+        <div style="margin-top:10px;padding:8px 12px;background:#16653122;border-radius:6px;font-size:12px;color:#86efac;">
+          Showing booked Saturday 11am. Sequence stopped. You spent 0 minutes on this follow-up.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num">4</div>
+      <div class="stat-label">Touchpoints sent<br>automatically</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">0</div>
+      <div class="stat-label">Minutes of manual<br>follow-up work</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:#22c55e">68%</div>
+      <div class="stat-label">Of deals close on<br>follow-up #2, 3, or 4</div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <h2>Never lose a lead to silence again.</h2>
+  <p>We build this for you. One call, we handle everything.</p>
+  <a href="mailto:olakunle@ajaniautomation.com?subject=Follow-Up%20Demo" class="btn">Book a Free Call</a>
+  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a>
+  <br><br>
+  <span style="color:#333;font-size:13px;">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+
+<script>
+  const events = [
+    { id:'e1', delay:500,  progress:10, msg:'Sarah submits inquiry from website...' },
+    { id:'e2', delay:2000, progress:28, msg:'Instant reply sent in 47 seconds...' },
+    { id:'e3', delay:4000, progress:52, msg:'Day 3 — no reply detected. Follow-up triggered...' },
+    { id:'e4', delay:6000, progress:75, msg:'Day 5 — market update sent. She opened it...' },
+    { id:'e5', delay:8000, progress:100, msg:'She replied. Showing booked. Sequence stopped automatically.' },
+  ];
+  let running = false;
+  function runDemo() {
+    if (running) return;
+    running = true;
+    const btn = document.getElementById('playBtn');
+    const fill = document.getElementById('progressFill');
+    const tick = document.getElementById('ticker');
+    btn.disabled = true;
+    btn.textContent = 'Running...';
+    tick.className = 'ticker active pulsing';
+    document.querySelectorAll('.t-event').forEach(el => el.classList.remove('visible'));
+    fill.style.width = '0%';
+    events.forEach(({ id, delay, progress, msg }) => {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('visible');
+        fill.style.width = progress + '%';
+        tick.textContent = msg;
+        if (progress === 100) {
+          tick.className = 'ticker';
+          tick.textContent = 'Done. 4 emails sent. 1 showing booked. 0 minutes of your time.';
+          btn.disabled = false;
+          btn.textContent = '↺ Replay';
+          running = false;
+        }
+      }, delay);
+    });
+  }
+</script>
+</body>
+</html>
+

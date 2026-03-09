@@ -292,6 +292,8 @@ function ProjectCard({ project }: { project: Project }) {
         {/* View Demo link */}
         <a
           href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
           style={{
             display: "flex",
             alignItems: "center",

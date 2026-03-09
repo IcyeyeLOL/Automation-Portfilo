@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 60-Second Difference | Ajani Automation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #e0e0e0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 70px 20px 50px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .hero .tag {
+    display: inline-block;
+    background: #ff6b351a;
+    color: #ff6b35;
+    border: 1px solid #ff6b3544;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: #ff6b35; }
+  .hero p {
+    font-size: 18px;
+    color: #888;
+    max-width: 520px;
+    margin: 0 auto 36px;
+  }
+
+  /* ── Split comparison ── */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: #1a1a1a;
+    border-top: 1px solid #1a1a1a;
+  }
+  @media (max-width: 700px) {
+    .split { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: #0d0d0d;
+    padding: 32px 28px;
+  }
+  .panel.before { border-right: 2px solid #1a1a1a; }
+  .panel-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .panel.before .panel-label { color: #ef4444; }
+  .panel.after  .panel-label { color: #22c55e; }
+  .panel h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .panel p  { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+  /* Inbox */
+  .inbox {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .inbox-header {
+    padding: 10px 14px;
+    background: #161616;
+    border-bottom: 1px solid #222;
+    font-size: 12px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .inbox-header span { color: #888; }
+  .msg {
+    padding: 12px 14px;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .msg:last-child { border-bottom: none; }
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .msg-body { flex: 1; min-width: 0; }
+  .msg-from { font-weight: 600; color: #ccc; font-size: 12px; }
+  .msg-text  { color: #777; font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .msg-time  { font-size: 11px; color: #ef4444; flex-shrink: 0; }
+  .msg-time.ok { color: #22c55e; }
+
+  .unread .msg-from { color: #fff; }
+  .unread .msg-text { color: #aaa; }
+  .unread-dot {
+    width: 7px; height: 7px;
+    background: #3b82f6;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  /* ── Demo section ── */
+  .demo-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+  .demo-section h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .demo-section > p {
+    color: #666;
+    margin-bottom: 36px;
+    font-size: 15px;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: #1e1e1e;
+  }
+
+  .t-event {
+    position: relative;
+    margin-bottom: 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    padding-bottom: 0;
+  }
+  .t-event.visible { opacity: 1; transform: translateY(0); }
+
+  .t-dot {
+    position: absolute;
+    left: -27px;
+    top: 14px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    background: #0a0a0a;
+  }
+  .t-event.visible .t-dot { border-color: #ff6b35; background: #ff6b35; }
+  .t-event.success .t-dot { border-color: #22c55e; background: #22c55e; }
+  .t-event.info    .t-dot { border-color: #3b82f6; background: #3b82f6; }
+
+  .t-card {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    margin-left: 4px;
+  }
+  .t-card:hover { border-color: #2a2a2a; }
+
+  .t-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .t-time {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff6b35;
+    background: #ff6b351a;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .t-event.success .t-time { color: #22c55e; background: #22c55e1a; }
+  .t-event.info    .t-time { color: #3b82f6; background: #3b82f61a; }
+
+  .t-source {
+    font-size: 11px;
+    color: #555;
+    background: #161616;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .t-title { font-weight: 600; font-size: 14px; color: #ddd; margin-bottom: 4px; }
+  .t-body  { font-size: 13px; color: #666; }
+  .t-body.highlight { color: #aaa; }
+
+  /* Chat bubble */
+  .bubble-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+  .bubble-row.right { flex-direction: row-reverse; }
+  .bubble {
+    max-width: 80%;
+    padding: 9px 13px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .bubble.inbound  { background: #1a1a2e; color: #ccc; border-radius: 14px 14px 14px 4px; }
+  .bubble.outbound { background: #ff6b35; color: #fff; border-radius: 14px 14px 4px 14px; }
+  .bubble.sms      { background: #166534; color: #bbf7d0; border-radius: 14px 14px 14px 4px; }
+
+  /* Stats row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 50px 0 0;
+  }
+  @media (max-width: 600px) { .stats { grid-template-columns: 1fr; } }
+  .stat-card {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-card .num {
+    font-size: 38px;
+    font-weight: 800;
+    color: #ff6b35;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-card .stat-label { font-size: 13px; color: #666; }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 60px 20px 80px;
+    border-top: 1px solid #1a1a1a;
+  }
+  .cta-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+  .cta-section p  { color: #666; margin-bottom: 32px; font-size: 15px; }
+  .btn {
+    display: inline-block;
+    background: #ff6b35;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: #e55a25; }
+  .btn-ghost {
+    display: inline-block;
+    background: transparent;
+    color: #888;
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid #222;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: #444; color: #ccc; }
+
+  /* Play button */
+  .play-wrap { text-align: center; margin-bottom: 40px; }
+  #playBtn {
+    background: #ff6b35;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 36px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  #playBtn:hover { background: #e55a25; transform: scale(1.02); }
+  #playBtn:disabled { background: #333; color: #666; cursor: default; transform: none; }
+
+  /* Progress */
+  .progress-bar {
+    height: 3px;
+    background: #1a1a1a;
+    border-radius: 3px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #ff6b35;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  /* Ticker */
+  .ticker {
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 28px;
+    min-height: 20px;
+  }
+  .ticker.active { color: #ff6b35; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #444;
+    margin-bottom: 20px;
+  }
+
+  /* Counter animation */
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.4 } }
+  .pulsing { animation: pulse 1s infinite; }
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
+  <a href="/demo6">6: No-Shows</a><a href="/demo7">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9">9: Seller Leads</a>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>The difference between<br><span>60 seconds</span> and 4 hours</h1>
+  <p>Real estate agents lose 30% of their leads to slow response. Here's what happens to the same 3 inquiries, with and without us.</p>
+</div>
+
+<!-- Before / After split -->
+<div class="split">
+
+  <!-- BEFORE -->
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>3 inquiries. 4 hours. 2 gone.</h2>
+    <p>Agent is at a showing. Inquiries sit unread. By the time they call back, prospects have already booked with a competitor.</p>
+    <div class="inbox">
+      <div class="inbox-header">📬 <span>Inbox — 3 unread</span></div>
+      <div class="msg unread">
+        <div class="unread-dot"></div>
+        <div class="msg-avatar" style="background:#1a2040;">JM</div>
+        <div class="msg-body">
+          <div class="msg-from">James M. — LoopNet</div>
+          <div class="msg-text">Is 2847 Oak Commercial still available? We need 3,000sqft by…</div>
+        </div>
+        <div class="msg-time">4h ago</div>
+      </div>
+      <div class="msg unread">
+        <div class="unread-dot"></div>
+        <div class="msg-avatar" style="background:#1a3020;">SR</div>
+        <div class="msg-body">
+          <div class="msg-from">Sarah R. — Website form</div>
+          <div class="msg-text">Hi, I'm looking for a 2BR in the Northside area under $380k,…</div>
+        </div>
+        <div class="msg-time">3h ago</div>
+      </div>
+      <div class="msg unread">
+        <div class="unread-dot"></div>
+        <div class="msg-avatar" style="background:#2a1a10;">DK</div>
+        <div class="msg-body">
+          <div class="msg-from">David K. — Email</div>
+          <div class="msg-text">Saw your listing at 519 Maple. Can we schedule a showing this week?</div>
+        </div>
+        <div class="msg-time">2h ago</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#ef44441a;border:1px solid #ef444433;border-radius:8px;font-size:13px;color:#fca5a5;">
+      ⚠️ James and Sarah already booked showings with other agents. David is calling around.
+    </div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>3 inquiries. 52 seconds. 3 conversations.</h2>
+    <p>Every inquiry gets a personalized reply in under 60 seconds. You get a text. It's logged. You step out of the showing and 3 warm conversations are waiting.</p>
+    <div class="inbox">
+      <div class="inbox-header">📬 <span>Inbox — 0 unread, 3 replied</span></div>
+      <div class="msg">
+        <div class="msg-avatar" style="background:#1a2040;">JM</div>
+        <div class="msg-body">
+          <div class="msg-from">James M. — LoopNet</div>
+          <div class="msg-text">Is 2847 Oak Commercial still available? We need 3,000sqft by…</div>
+        </div>
+        <div class="msg-time ok">0:47 ✓</div>
+      </div>
+      <div class="msg">
+        <div class="msg-avatar" style="background:#1a3020;">SR</div>
+        <div class="msg-body">
+          <div class="msg-from">Sarah R. — Website form</div>
+          <div class="msg-text">Hi, I'm looking for a 2BR in the Northside area under $380k,…</div>
+        </div>
+        <div class="msg-time ok">0:52 ✓</div>
+      </div>
+      <div class="msg">
+        <div class="msg-avatar" style="background:#2a1a10;">DK</div>
+        <div class="msg-body">
+          <div class="msg-from">David K. — Email</div>
+          <div class="msg-text">Saw your listing at 519 Maple. Can we schedule a showing this week?</div>
+        </div>
+        <div class="msg-time ok">0:38 ✓</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">
+      ✅ All 3 replied instantly. James wants to view tomorrow. Sarah's asking for listings. David booked a showing.
+    </div>
+  </div>
+
+</div>
+
+<!-- Live demo -->
+<div class="demo-section">
+  <div class="section-label">Watch it happen</div>
+  <h2>Same inquiry. See what happens in real time.</h2>
+  <p>Press play. Watch a messy LoopNet DM get picked up, turned into a real reply, logged, and your phone notified — in under 60 seconds.</p>
+
+  <div class="play-wrap">
+    <button id="playBtn" onclick="runDemo()">▶ Play Demo</button>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to watch the workflow run live.</div>
+
+  <div class="timeline" id="timeline">
+
+    <!-- Event 1: Inquiry arrives -->
+    <div class="t-event" id="e1">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta">
+          <div class="t-time">0:00</div>
+          <div class="t-source">LoopNet DM</div>
+        </div>
+        <div class="t-title">Inquiry arrives</div>
+        <div class="bubble-row">
+          <div class="bubble inbound">"Hey, is the commercial space at 2847 Oak still available? We're looking for around 3,000sqft and need to move by end of month."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event 2: System picks it up -->
+    <div class="t-event" id="e2">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta">
+          <div class="t-time">0:03</div>
+          <div class="t-source">n8n workflow</div>
+        </div>
+        <div class="t-title">Inquiry detected and parsed</div>
+        <div class="t-body">Source: LoopNet · Property: 2847 Oak · Urgency: end of month · Size: 3,000sqft<br><br>
+          <span style="color:#555;font-size:12px;">Drafting personalized reply based on listing data…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event 3: Reply sent -->
+    <div class="t-event success" id="e3">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta">
+          <div class="t-time">0:47</div>
+          <div class="t-source">Auto-reply sent</div>
+        </div>
+        <div class="t-title">Personalized reply delivered</div>
+        <div class="bubble-row right">
+          <div class="bubble outbound">"Hi James! Yes, 2847 Oak is still available — 3,200sqft, move-in ready. I have Thursday 2pm or Friday morning open for a walkthrough. What works for you?"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event 4: SMS to owner -->
+    <div class="t-event info" id="e4">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta">
+          <div class="t-time">0:48</div>
+          <div class="t-source">SMS · Twilio</div>
+        </div>
+        <div class="t-title">You get notified instantly</div>
+        <div class="bubble-row">
+          <div class="bubble sms">📱 New lead: James M. via LoopNet — asking about 2847 Oak, 3k sqft, end of month. Auto-replied ✓ — Reply STOP to pause notifications.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event 5: CRM logged -->
+    <div class="t-event success" id="e5">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta">
+          <div class="t-time">0:49</div>
+          <div class="t-source">Google Sheets</div>
+        </div>
+        <div class="t-title">Lead logged automatically</div>
+        <div class="t-body highlight">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:12px;font-family:monospace;">
+            <div style="color:#555">Name</div>
+            <div style="color:#555">Property</div>
+            <div style="color:#555">Response</div>
+            <div style="color:#555">Status</div>
+            <div style="color:#aaa">James M.</div>
+            <div style="color:#aaa">2847 Oak</div>
+            <div style="color:#22c55e">0:47</div>
+            <div style="color:#22c55e">Replied ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event 6: James replies back -->
+    <div class="t-event success" id="e6">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta">
+          <div class="t-time">8:23</div>
+          <div class="t-source">LoopNet DM</div>
+        </div>
+        <div class="t-title">James replies — conversation started</div>
+        <div class="bubble-row">
+          <div class="bubble inbound">"Thursday 2pm works great. See you then."</div>
+        </div>
+        <div style="margin-top:10px;padding:8px 12px;background:#16653122;border-radius:6px;font-size:12px;color:#86efac;">
+          Showing booked. No manual follow-up needed. You were at a showing the whole time.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num">52s</div>
+      <div class="stat-label">Average response time<br>(was 4+ hours)</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">0</div>
+      <div class="stat-label">Minutes of your time<br>spent on follow-up</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:#22c55e">29</div>
+      <div class="stat-label">New clients in 60 days<br>for one broker we work with</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Want this for your business?</h2>
+  <p>We'll set it up for you, free of charge. Takes one call.</p>
+  <a href="mailto:lime17451@gmail.com?subject=Demo%20Request" class="btn">Book a 10-min call</a>
+  <a href="mailto:lime17451@gmail.com" class="btn-ghost">Email Olakunle</a>
+  <br><br>
+  <span style="color:#333;font-size:13px;">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+
+<script>
+  const events = [
+    { id: 'e1', delay: 600,  progress: 10, msg: 'Inquiry arrives from LoopNet...' },
+    { id: 'e2', delay: 1800, progress: 25, msg: 'Workflow triggered. Parsing inquiry...' },
+    { id: 'e3', delay: 3400, progress: 55, msg: 'Personalized reply drafted and sent. (0:47)' },
+    { id: 'e4', delay: 4200, progress: 70, msg: 'SMS notification sent to your phone...' },
+    { id: 'e5', delay: 5200, progress: 82, msg: 'Lead logged to CRM automatically...' },
+    { id: 'e6', delay: 7000, progress: 100, msg: 'James replied. Showing booked. Done.' },
+  ];
+
+  let running = false;
+
+  function runDemo() {
+    if (running) return;
+    running = true;
+
+    const btn  = document.getElementById('playBtn');
+    const fill = document.getElementById('progressFill');
+    const tick = document.getElementById('ticker');
+
+    btn.disabled = true;
+    btn.textContent = 'Running...';
+    tick.className = 'ticker active pulsing';
+
+    // Reset
+    document.querySelectorAll('.t-event').forEach(el => {
+      el.classList.remove('visible');
+    });
+    fill.style.width = '0%';
+
+    events.forEach(({ id, delay, progress, msg }) => {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('visible');
+        fill.style.width = progress + '%';
+        tick.textContent = msg;
+        if (progress === 100) {
+          tick.className = 'ticker';
+          tick.textContent = 'Done. 3 inquiries handled. 0 minutes of your time.';
+          btn.disabled = false;
+          btn.textContent = '↺ Replay';
+          running = false;
+        }
+      }, delay);
+    });
+  }
+
+  // Auto-reveal all events if JS plays slowly
+  window.addEventListener('load', () => {
+    // Show first event immediately for non-JS fallback context
+  });
+</script>
+</body>
+</html>
+

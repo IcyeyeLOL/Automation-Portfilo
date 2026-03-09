@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review & Referral Robot | Ajani Automation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+  .hero { text-align: center; padding: 70px 20px 50px; border-bottom: 1px solid #1a1a1a; }
+  .hero .tag { display: inline-block; background: #f59e0b1a; color: #fbbf24; border: 1px solid #f59e0b44; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+  .hero h1 span { color: #fbbf24; }
+  .hero p { font-size: 18px; color: #888; max-width: 540px; margin: 0 auto 36px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #1a1a1a; }
+  @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
+  .panel { background: #0d0d0d; padding: 32px 28px; }
+  .panel-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+  .panel.before .panel-label { color: #ef4444; }
+  .panel.after  .panel-label { color: #22c55e; }
+  .panel h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .panel p  { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+  .review-list { display: flex; flex-direction: column; gap: 10px; }
+  .review-card { background: #111; border: 1px solid #1e1e1e; border-radius: 10px; padding: 14px; }
+  .review-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .review-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .review-name { font-weight: 600; font-size: 13px; color: #ccc; }
+  .stars { color: #fbbf24; font-size: 13px; margin-left: auto; }
+  .stars.empty { color: #333; }
+  .review-text { font-size: 12px; color: #666; font-style: italic; }
+  .review-date { font-size: 11px; color: #444; margin-top: 6px; }
+
+  .demo-section { max-width: 860px; margin: 0 auto; padding: 60px 20px; }
+  .demo-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .demo-section > p { color: #666; margin-bottom: 36px; font-size: 15px; }
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #444; margin-bottom: 20px; }
+
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 2px; background: #1e1e1e; }
+  .t-event { position: relative; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .t-event.visible { opacity: 1; transform: translateY(0); }
+  .t-dot { position: absolute; left: -27px; top: 14px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #333; background: #0a0a0a; }
+  .t-event.visible .t-dot { border-color: #fbbf24; background: #fbbf24; }
+  .t-event.success .t-dot { border-color: #22c55e; background: #22c55e; }
+  .t-event.purple  .t-dot { border-color: #a855f7; background: #a855f7; }
+  .t-card { background: #111; border: 1px solid #1e1e1e; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; margin-left: 4px; }
+  .t-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .t-time { font-size: 11px; font-weight: 700; color: #fbbf24; background: #f59e0b1a; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+  .t-event.success .t-time { color: #22c55e; background: #22c55e1a; }
+  .t-event.purple  .t-time { color: #a855f7; background: #a855f71a; }
+  .t-source { font-size: 11px; color: #555; background: #161616; padding: 2px 8px; border-radius: 10px; }
+  .t-title { font-weight: 600; font-size: 14px; color: #ddd; margin-bottom: 6px; }
+  .t-body  { font-size: 13px; color: #666; }
+
+  .sms-bubble { background: #1a1200; border: 1px solid #f59e0b33; border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #fde68a; line-height: 1.6; }
+  .email-preview { background: #0f0f0a; border: 1px solid #2a2a1a; border-radius: 8px; padding: 14px; font-size: 13px; }
+  .email-header { border-bottom: 1px solid #1a1a0e; padding-bottom: 10px; margin-bottom: 10px; }
+  .email-field { display: flex; gap: 8px; margin-bottom: 4px; font-size: 12px; }
+  .email-field span:first-child { color: #555; width: 40px; flex-shrink: 0; }
+  .email-field span:last-child { color: #aaa; }
+  .email-body { color: #888; line-height: 1.6; }
+  .open-badge { display: inline-block; background: #22c55e1a; color: #22c55e; border: 1px solid #22c55e33; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-top: 8px; }
+
+  .review-result { background: #0f0d00; border: 1px solid #fbbf2433; border-radius: 10px; padding: 14px; }
+  .review-result-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .big-stars { font-size: 18px; color: #fbbf24; }
+  .review-result-name { font-weight: 600; color: #ccc; }
+  .review-result-source { font-size: 11px; color: #555; margin-left: auto; }
+  .review-result-text { font-size: 13px; color: #888; font-style: italic; }
+
+  .referral-box { background: #0a0f1a; border: 1px solid #a855f733; border-radius: 10px; padding: 14px; }
+  .referral-box-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; color: #c4b5fd; font-weight: 600; }
+  .referral-box-body { font-size: 13px; color: #888; }
+  .referral-badge { display: inline-block; background: #a855f71a; color: #a855f7; border: 1px solid #a855f733; padding: 4px 10px; border-radius: 10px; font-size: 11px; margin-top: 8px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 50px 0 0; }
+  @media (max-width: 600px) { .stats { grid-template-columns: 1fr; } }
+  .stat-card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 20px; text-align: center; }
+  .stat-card .num { font-size: 38px; font-weight: 800; color: #fbbf24; line-height: 1; margin-bottom: 6px; }
+  .stat-card .stat-label { font-size: 13px; color: #666; }
+
+  .cta-section { text-align: center; padding: 60px 20px 80px; border-top: 1px solid #1a1a1a; }
+  .cta-section h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+  .cta-section p  { color: #666; margin-bottom: 32px; font-size: 15px; }
+  .btn { display: inline-block; background: #d97706; color: #fff; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 8px; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn:hover { background: #b45309; }
+  .btn-ghost { display: inline-block; background: transparent; color: #888; font-size: 13px; padding: 10px 20px; border-radius: 8px; text-decoration: none; border: 1px solid #222; cursor: pointer; margin-left: 12px; transition: border-color 0.2s, color 0.2s; }
+  .btn-ghost:hover { border-color: #444; color: #ccc; }
+
+  .play-wrap { text-align: center; margin-bottom: 40px; }
+  #playBtn { background: #d97706; color: #fff; border: none; border-radius: 50px; padding: 14px 36px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+  #playBtn:hover { background: #b45309; transform: scale(1.02); }
+  #playBtn:disabled { background: #333; color: #666; cursor: default; transform: none; }
+  .progress-bar { height: 3px; background: #1a1a1a; border-radius: 3px; margin-bottom: 32px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #fbbf24; width: 0%; transition: width 0.3s ease; }
+  .ticker { text-align: center; font-size: 13px; color: #555; margin-bottom: 28px; min-height: 20px; }
+  .ticker.active { color: #fbbf24; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.4 } }
+  .pulsing { animation: pulse 1s infinite; }
+
+  .nav-bar { display: flex; justify-content: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap; }
+  .nav-bar a { font-size: 12px; color: #555; text-decoration: none; padding: 6px 14px; border: 1px solid #222; border-radius: 20px; transition: all 0.2s; }
+  .nav-bar a:hover { color: #ccc; border-color: #444; }
+  .nav-bar a.active { color: #fbbf24; border-color: #f59e0b44; background: #f59e0b1a; }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3" class="active">3: Reviews</a><a href="/demo4">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
+  <a href="/demo6">6: No-Shows</a><a href="/demo7">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9">9: Seller Leads</a>
+</div>
+
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>Every closing should give you<br><span>5 stars and a referral</span></h1>
+  <p>Most agents close a deal and move on. Here's how one closing turns into a 5-star review, a testimonial, and a referred client — automatically.</p>
+</div>
+
+<div class="split">
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>Great client. Zero reviews.</h2>
+    <p>You close deals. Happy clients. But you never remember to ask for a review. Your Google profile has 4 reviews from 2021.</p>
+    <div class="review-list">
+      <div class="review-card">
+        <div class="review-top">
+          <div class="review-avatar" style="background:#1a2040;">JM</div>
+          <div class="review-name">James M.</div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-text">"Great agent. Highly recommend."</div>
+        <div class="review-date">3 years ago</div>
+      </div>
+      <div class="review-card">
+        <div class="review-top">
+          <div class="review-avatar" style="background:#1a3020;">TR</div>
+          <div class="review-name">T. Rodriguez</div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-text">"Very professional."</div>
+        <div class="review-date">2 years ago</div>
+      </div>
+      <div class="review-card" style="border-color:#ef444422;">
+        <div class="review-top">
+          <div class="review-avatar" style="background:#1a1a1a; color:#333;">??</div>
+          <div class="review-name" style="color:#444;">Last 8 closings</div>
+          <div class="stars empty">☆☆☆☆☆</div>
+        </div>
+        <div class="review-text" style="color:#444;">Never asked. Never got one.</div>
+        <div class="review-date" style="color:#333;">Missed opportunity × 8</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>Every close. Every review. Every referral.</h2>
+    <p>Close a deal → trigger fires → thank you sent → review request at the right moment → referral ask 30 days later. All automatic.</p>
+    <div class="review-list">
+      <div class="review-card" style="border-color:#22c55e33;">
+        <div class="review-top">
+          <div class="review-avatar" style="background:#1a3020;">SR</div>
+          <div class="review-name">Sarah R.</div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-text">"Olakunle was incredibly responsive. Got back to me within the hour, found me exactly what I was looking for. 10/10 would recommend."</div>
+        <div class="review-date">2 days ago · Google</div>
+      </div>
+      <div class="review-card" style="border-color:#a855f733;">
+        <div class="review-top">
+          <div class="review-avatar" style="background:#1a0a2a;">DK</div>
+          <div class="review-name">David K.</div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-text">"He replied faster than any agent I've ever contacted. Closed in 3 weeks."</div>
+        <div class="review-date">1 week ago · Referred 2 friends</div>
+      </div>
+      <div class="review-card" style="border-color:#22c55e33;">
+        <div class="review-top">
+          <div class="review-avatar" style="background:#0a1a2a;">MP</div>
+          <div class="review-name">Marcus P.</div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-text">"Smooth from start to finish. Got the referral from David — did not disappoint."</div>
+        <div class="review-date">3 days ago · Referred</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-section">
+  <div class="section-label">Watch one closing become three touchpoints</div>
+  <h2>Sarah just closed. Watch what happens next — automatically.</h2>
+  <p>The moment a deal closes, a 30-day sequence fires: thank you → Google review request → referral ask. Zero manual work.</p>
+
+  <div class="play-wrap">
+    <button id="playBtn" onclick="runDemo()">▶ Play Sequence</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to watch the post-closing sequence.</div>
+
+  <div class="timeline" id="timeline">
+
+    <div class="t-event" id="e1">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 0 · Closing day</div><div class="t-source">Trigger fired</div></div>
+        <div class="t-title">Deal marked closed → sequence starts</div>
+        <div class="t-body">Sarah R. — 412 Northview Drive. Closed at $369,000. Sequence triggered automatically.</div>
+      </div>
+    </div>
+
+    <div class="t-event success" id="e2">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 0 · Same day</div><div class="t-source">Auto · Email + SMS</div></div>
+        <div class="t-title">Personalized thank-you sent</div>
+        <div class="sms-bubble">📱 "Sarah — it was a pleasure helping you find your home at 412 Northview! Wishing you many happy years there. Feel free to reach out anytime. — Olakunle"</div>
+      </div>
+    </div>
+
+    <div class="t-event" id="e3">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 2 · 10:00am</div><div class="t-source">Auto · Email</div></div>
+        <div class="t-title">Google review request sent at the right moment</div>
+        <div class="email-preview">
+          <div class="email-header">
+            <div class="email-field"><span>To:</span><span>sarah.r@gmail.com</span></div>
+            <div class="email-field"><span>Subj:</span><span>Quick favor — would mean a lot</span></div>
+          </div>
+          <div class="email-body">"Hi Sarah! Hope you're settling in well at Northview. If you have 2 minutes, an honest Google review would genuinely help me help more families like yours. Here's the direct link — takes less than 60 seconds:"<br><br>
+            <span style="color:#fbbf24;">→ [Leave a Google Review]</span>
+          </div>
+          <div class="open-badge">✓ Opened · Reviewed same day</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-event success" id="e4">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 2 · 2:15pm</div><div class="t-source">Google Reviews</div></div>
+        <div class="t-title">5-star review posted</div>
+        <div class="review-result">
+          <div class="review-result-top">
+            <div class="big-stars">★★★★★</div>
+            <div class="review-result-name">Sarah R.</div>
+            <div class="review-result-source">Google · 2 days ago</div>
+          </div>
+          <div class="review-result-text">"Olakunle was incredibly responsive. Got back to me within the hour, found me exactly what I was looking for. 10/10 would recommend."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-event purple" id="e5">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 30 · 10:00am</div><div class="t-source">Auto · Email</div></div>
+        <div class="t-title">Referral ask sent — perfectly timed</div>
+        <div class="email-preview">
+          <div class="email-header">
+            <div class="email-field"><span>To:</span><span>sarah.r@gmail.com</span></div>
+            <div class="email-field"><span>Subj:</span><span>How's the new place?</span></div>
+          </div>
+          <div class="email-body">"Sarah! Just checking in — hope you're loving Northview. My business runs mostly on referrals, so if you know anyone thinking about buying or selling in the area, I'd love to help them the same way I helped you."</div>
+          <div class="open-badge">✓ Forwarded to 2 friends</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-event success" id="e6">
+      <div class="t-dot"></div>
+      <div class="t-card">
+        <div class="t-meta"><div class="t-time">Day 32</div><div class="t-source">New inquiry</div></div>
+        <div class="t-title">Referred client reaches out</div>
+        <div class="referral-box">
+          <div class="referral-box-top">🔗 New lead — referred by Sarah R.</div>
+          <div class="referral-box-body">"Hi, Sarah mentioned you helped her find a place in Northside. I'm looking for something similar in the $350-400k range. Are you available for a call?"</div>
+          <div class="referral-badge">Cost to acquire: $0</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num">3</div>
+      <div class="stat-label">Post-close touchpoints<br>sent automatically</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:#fbbf24;">★ 4.9</div>
+      <div class="stat-label">Average Google rating<br>for agents using this</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:#22c55e;">$0</div>
+      <div class="stat-label">Cost to acquire<br>a referred client</div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section">
+  <h2>Turn every closing into your next client.</h2>
+  <p>We build the whole sequence for you. One setup call.</p>
+  <a href="mailto:olakunle@ajaniautomation.com?subject=Review%20Robot%20Demo" class="btn">Book a Free Call</a>
+  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a>
+  <br><br>
+  <span style="color:#333;font-size:13px;">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+
+<script>
+  const events = [
+    { id:'e1', delay:500,  progress:10, msg:'Deal closed — sequence triggered...' },
+    { id:'e2', delay:2000, progress:25, msg:'Personalized thank-you sent same day...' },
+    { id:'e3', delay:4000, progress:50, msg:'Day 2 — review request sent at the perfect moment...' },
+    { id:'e4', delay:6000, progress:68, msg:'Sarah left a 5-star review! 🌟' },
+    { id:'e5', delay:8000, progress:84, msg:'Day 30 — referral ask sent...' },
+    { id:'e6', delay:10000, progress:100, msg:'Referred client reached out. New deal in pipeline. Cost: $0.' },
+  ];
+  let running = false;
+  function runDemo() {
+    if (running) return;
+    running = true;
+    const btn = document.getElementById('playBtn');
+    const fill = document.getElementById('progressFill');
+    const tick = document.getElementById('ticker');
+    btn.disabled = true; btn.textContent = 'Running...';
+    tick.className = 'ticker active pulsing';
+    document.querySelectorAll('.t-event').forEach(el => el.classList.remove('visible'));
+    fill.style.width = '0%';
+    events.forEach(({ id, delay, progress, msg }) => {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('visible');
+        fill.style.width = progress + '%';
+        tick.textContent = msg;
+        if (progress === 100) {
+          tick.className = 'ticker';
+          tick.textContent = '1 closing → 1 review + 1 referral + 1 new client. All automatic.';
+          btn.disabled = false; btn.textContent = '↺ Replay';
+          running = false;
+        }
+      }, delay);
+    });
+  }
+</script>
+</body>
+</html>
+

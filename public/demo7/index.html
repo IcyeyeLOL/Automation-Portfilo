@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dead Lead Reviver | Ajani Automation</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+  .nav-bar{display:flex;justify-content:center;gap:8px;padding:14px 20px;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
+  .nav-bar a{font-size:11px;color:#555;text-decoration:none;padding:5px 12px;border:1px solid #222;border-radius:20px;transition:all .2s}
+  .nav-bar a:hover{color:#ccc;border-color:#444}
+  .nav-bar a.active{color:#fb923c;border-color:#f9731644;background:#f973161a}
+  .hero{text-align:center;padding:70px 20px 50px;border-bottom:1px solid #1a1a1a}
+  .tag{display:inline-block;background:#f973161a;color:#fb923c;border:1px solid #f9731644;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:16px}
+  .hero h1 span{color:#fb923c}
+  .hero p{font-size:18px;color:#888;max-width:540px;margin:0 auto}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#1a1a1a}
+  @media(max-width:700px){.split{grid-template-columns:1fr}}
+  .panel{background:#0d0d0d;padding:32px 28px}
+  .panel-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px}
+  .panel.before .panel-label{color:#ef4444}
+  .panel.after .panel-label{color:#22c55e}
+  .panel h2{font-size:20px;font-weight:700;margin-bottom:8px}
+  .panel p{color:#666;font-size:14px;margin-bottom:20px}
+  .dead-list{display:flex;flex-direction:column;gap:8px}
+  .dead-row{display:flex;align-items:center;gap:10px;padding:12px;background:#111;border:1px solid #1e1e1e;border-radius:8px;font-size:12px}
+  .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+  .dname{flex:1;font-weight:600;color:#555}
+  .dsub{font-size:11px;color:#444}
+  .days-badge{font-size:10px;padding:2px 8px;border-radius:8px;background:#1a1a1a;color:#444}
+  .revived{color:#22c55e;font-size:11px}
+  .demo-section{max-width:860px;margin:0 auto;padding:60px 20px}
+  .demo-section h2{font-size:28px;font-weight:800;margin-bottom:8px}
+  .demo-section>p{color:#666;margin-bottom:36px;font-size:15px}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:20px}
+  .timeline{position:relative;padding-left:32px}
+  .timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:#1e1e1e}
+  .t-event{position:relative;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+  .t-event.visible{opacity:1;transform:translateY(0)}
+  .t-dot{position:absolute;left:-27px;top:14px;width:14px;height:14px;border-radius:50%;border:2px solid #333;background:#0a0a0a}
+  .t-event.visible .t-dot{border-color:#fb923c;background:#fb923c}
+  .t-event.alive .t-dot{border-color:#22c55e;background:#22c55e}
+  .t-card{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px 16px;margin-bottom:10px;margin-left:4px}
+  .t-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  .t-time{font-size:11px;font-weight:700;color:#fb923c;background:#f973161a;padding:2px 8px;border-radius:10px;white-space:nowrap}
+  .t-event.alive .t-time{color:#22c55e;background:#22c55e1a}
+  .t-source{font-size:11px;color:#555;background:#161616;padding:2px 8px;border-radius:10px}
+  .t-title{font-weight:600;font-size:14px;color:#ddd;margin-bottom:6px}
+  .t-body{font-size:13px;color:#666}
+  .email-box{background:#0f0a00;border:1px solid #f9731633;border-radius:8px;padding:14px;font-size:13px}
+  .ef{display:flex;gap:8px;margin-bottom:4px;font-size:12px}
+  .ef span:first-child{color:#555;width:40px;flex-shrink:0}
+  .ef span:last-child{color:#aaa}
+  .eb{color:#888;line-height:1.6;border-top:1px solid #1a1200;padding-top:10px;margin-top:8px}
+  .ob{display:inline-block;background:#22c55e1a;color:#22c55e;border:1px solid #22c55e33;padding:2px 8px;border-radius:10px;font-size:11px;margin-top:8px}
+  .reply-box{background:#051a0f;border:1px solid #22c55e33;border-radius:10px;padding:14px;margin-top:10px}
+  .reply-top{font-size:11px;color:#4ade80;margin-bottom:8px;font-weight:700}
+  .reply-text{font-size:13px;color:#86efac;line-height:1.6}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:50px 0 0}
+  @media(max-width:600px){.stats{grid-template-columns:1fr}}
+  .stat-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:20px;text-align:center}
+  .stat-card .num{font-size:38px;font-weight:800;color:#fb923c;line-height:1;margin-bottom:6px}
+  .stat-card .stat-label{font-size:13px;color:#666}
+  .cta-section{text-align:center;padding:60px 20px 80px;border-top:1px solid #1a1a1a}
+  .cta-section h2{font-size:28px;font-weight:800;margin-bottom:12px}
+  .cta-section p{color:#666;margin-bottom:32px;font-size:15px}
+  .btn{display:inline-block;background:#ea580c;color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;text-decoration:none}
+  .btn:hover{background:#c2410c}
+  .btn-ghost{display:inline-block;background:transparent;color:#888;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none;border:1px solid #222;margin-left:12px}
+  .play-wrap{text-align:center;margin-bottom:40px}
+  #playBtn{background:#ea580c;color:#fff;border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer}
+  #playBtn:hover{background:#c2410c}
+  #playBtn:disabled{background:#333;color:#666;cursor:default}
+  .progress-bar{height:3px;background:#1a1a1a;border-radius:3px;margin-bottom:32px;overflow:hidden}
+  .progress-fill{height:100%;background:#fb923c;width:0%;transition:width .3s}
+  .ticker{text-align:center;font-size:13px;color:#555;margin-bottom:28px;min-height:20px}
+  .ticker.active{color:#fb923c}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .pulsing{animation:pulse 1s infinite}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
+  <a href="/demo6">6: No-Shows</a><a href="/demo7" class="active">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9">9: Seller Leads</a>
+</div>
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>Your best leads are the ones<br>you already <span>gave up on</span></h1>
+  <p>Most agents delete leads that go cold after 30 days. The data says 40% of them were still planning to buy — just not right now. Here's how to catch them.</p>
+</div>
+<div class="split">
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>90 dead leads. Sitting in your CRM. Doing nothing.</h2>
+    <p>They inquired, didn't move forward, and you moved on. But they're still out there, still planning to buy — just waiting on the right moment or the right nudge.</p>
+    <div class="dead-list">
+      <div class="dead-row"><div class="av" style="background:#111;border:1px solid #222">JM</div><div style="flex:1"><div class="dname">James M.</div><div class="dsub">Inquired about commercial space</div></div><div class="days-badge">91 days cold</div></div>
+      <div class="dead-row"><div class="av" style="background:#111;border:1px solid #222">TR</div><div style="flex:1"><div class="dname">T. Rodriguez</div><div class="dsub">Was looking at 2BR listings</div></div><div class="days-badge">67 days cold</div></div>
+      <div class="dead-row"><div class="av" style="background:#111;border:1px solid #222">MP</div><div style="flex:1"><div class="dname">Marcus P.</div><div class="dsub">First-time buyer, wasn't ready</div></div><div class="days-badge">44 days cold</div></div>
+      <div class="dead-row"><div class="av" style="background:#111;border:1px solid #222">+87</div><div style="flex:1"><div class="dname">87 more cold leads</div><div class="dsub">All ghosted. None followed up on.</div></div><div class="days-badge">30-120 days</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#ef44441a;border:1px solid #ef444433;border-radius:8px;font-size:13px;color:#fca5a5;">⚠️ Marcus just closed with a competitor. He was in your CRM the whole time.</div>
+  </div>
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>90 cold leads get a perfectly timed revival email.</h2>
+    <p>Every lead that's been cold 30+ days gets a short, human-sounding re-engagement. No pitch. Just a relevant update. 15-25% write back.</p>
+    <div class="dead-list">
+      <div class="dead-row" style="border-color:#22c55e44"><div class="av" style="background:#051a0f">JM</div><div style="flex:1"><div class="dname" style="color:#ccc">James M.</div><div class="dsub">Revival email sent Day 90</div></div><div class="revived">Replied ✓</div></div>
+      <div class="dead-row" style="border-color:#f59e0b44"><div class="av" style="background:#1a1200">TR</div><div style="flex:1"><div class="dname" style="color:#ccc">T. Rodriguez</div><div class="dsub">Revival email sent Day 67</div></div><div style="color:#f59e0b;font-size:11px">Opened</div></div>
+      <div class="dead-row" style="border-color:#22c55e44"><div class="av" style="background:#051a0f">MP</div><div style="flex:1"><div class="dname" style="color:#ccc">Marcus P.</div><div class="dsub">Revival email sent Day 44</div></div><div class="revived">Replied ✓</div></div>
+      <div class="dead-row" style="border-color:#f59e0b44"><div class="av" style="background:#1a1200">+87</div><div style="flex:1"><div class="dname" style="color:#ccc">87 more cold leads</div><div class="dsub">All received personalized revivals</div></div><div style="color:#fbbf24;font-size:11px">~22 replied</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">✅ Marcus replied. He's ready now. Pipeline just grew with zero new lead costs.</div>
+  </div>
+</div>
+<div class="demo-section">
+  <div class="section-label">Watch a cold lead come back to life</div>
+  <h2>James went cold 91 days ago. Watch what happens when we reach back out.</h2>
+  <p>One short email. Relevant market context. No pitch. No pressure. Just a reason to reply — and he does.</p>
+  <div class="play-wrap"><button id="playBtn" onclick="runDemo()">▶ Revive the Lead</button></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to watch the revival.</div>
+  <div class="timeline">
+    <div class="t-event" id="e1"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 91</div><div class="t-source">Cold lead detected</div></div>
+      <div class="t-title">James flagged as cold — revival triggered</div>
+      <div class="t-body">Last contact: 91 days ago. Original inquiry: 3,000sqft commercial, end-of-month urgency. Generating personalized revival email...</div>
+    </div></div>
+    <div class="t-event" id="e2"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 91 · 10:00am</div><div class="t-source">Revival email sent</div></div>
+      <div class="t-title">Short, human revival email delivered</div>
+      <div class="email-box">
+        <div class="ef"><span>To:</span><span>james.m@email.com</span></div>
+        <div class="ef"><span>Subj:</span><span>Saw something you might want to know</span></div>
+        <div class="eb">"Hey James — hope you're well. I know we spoke a while back about a commercial space in the area. Wanted to give you a heads up: two spaces just came available at 2847 Oak and 1190 Commerce Blvd — both around 3k sqft, both move-in ready.<br><br>No pressure at all, but figured you'd want to know in case timing works out better now. Happy to answer any questions."</div>
+        <div class="ob">✓ Opened 10:47am</div>
+      </div>
+    </div></div>
+    <div class="t-event alive" id="e3"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 91 · 11:12am</div><div class="t-source">James replies</div></div>
+      <div class="t-title">James writes back — 1 hour after revival email</div>
+      <div class="reply-box">
+        <div class="reply-top">📩 Reply received</div>
+        <div class="reply-text">"Actually perfect timing — we got delayed but we're actively looking again. The Commerce Blvd one sounds interesting. Can we set up a walkthrough this week?"</div>
+      </div>
+    </div></div>
+    <div class="t-event alive" id="e4"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 91 · 11:14am</div><div class="t-source">Pipeline updated</div></div>
+      <div class="t-title">James moved from COLD → HOT. Walkthrough booked.</div>
+      <div class="t-body" style="color:#aaa">91 days of silence. One email. A dead lead just became your hottest prospect. Cost to reactivate: $0.</div>
+    </div></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="num">22%</div><div class="stat-label">Average reply rate<br>on cold lead revivals</div></div>
+    <div class="stat-card"><div class="num">$0</div><div class="stat-label">Cost to reactivate<br>vs buying new leads</div></div>
+    <div class="stat-card"><div class="num" style="color:#22c55e">90</div><div class="stat-label">Days of silence reversed<br>with one email</div></div>
+  </div>
+</div>
+<div class="cta-section">
+  <h2>Your next deal is already in your CRM.</h2>
+  <p>We build the revival sequence. You just show up for the call.</p>
+  <a href="mailto:olakunle@ajaniautomation.com?subject=Dead+Lead+Revival+Demo" class="btn">Book a Free Call</a>
+  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a><br><br>
+  <span style="color:#333;font-size:13px">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+<script>
+  let running=false;
+  function runDemo(){
+    if(running)return;running=true;
+    const btn=document.getElementById('playBtn'),fill=document.getElementById('progressFill'),tick=document.getElementById('ticker');
+    btn.disabled=true;btn.textContent='Reviving...';tick.className='ticker active pulsing';
+    document.querySelectorAll('.t-event').forEach(el=>el.classList.remove('visible'));fill.style.width='0%';
+    [{id:'e1',delay:500,p:20,msg:'Day 91 — James flagged as cold lead...'},{id:'e2',delay:2500,p:50,msg:'Revival email sent. Short, human, no pitch...'},{id:'e3',delay:5500,p:80,msg:'James replied after 1 hour of silence 🔥'},{id:'e4',delay:7500,p:100,msg:'91 days cold → HOT lead. Walkthrough booked.'}]
+    .forEach(({id,delay,p,msg})=>setTimeout(()=>{document.getElementById(id).classList.add('visible');fill.style.width=p+'%';tick.textContent=msg;if(p===100){tick.className='ticker';btn.disabled=false;btn.textContent='↺ Replay';running=false;}},delay));
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Lead Nurture | Ajani Automation</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+  .nav-bar{display:flex;justify-content:center;gap:8px;padding:14px 20px;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
+  .nav-bar a{font-size:11px;color:#555;text-decoration:none;padding:5px 12px;border:1px solid #222;border-radius:20px;transition:all .2s}
+  .nav-bar a:hover{color:#ccc;border-color:#444}
+  .nav-bar a.active{color:#c084fc;border-color:#a855f744;background:#a855f71a}
+  .hero{text-align:center;padding:70px 20px 50px;border-bottom:1px solid #1a1a1a}
+  .tag{display:inline-block;background:#a855f71a;color:#c084fc;border:1px solid #a855f744;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:16px}
+  .hero h1 span{color:#c084fc}
+  .hero p{font-size:18px;color:#888;max-width:540px;margin:0 auto}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#1a1a1a}
+  @media(max-width:700px){.split{grid-template-columns:1fr}}
+  .panel{background:#0d0d0d;padding:32px 28px}
+  .panel-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px}
+  .panel.before .panel-label{color:#ef4444}
+  .panel.after .panel-label{color:#22c55e}
+  .panel h2{font-size:20px;font-weight:700;margin-bottom:8px}
+  .panel p{color:#666;font-size:14px;margin-bottom:20px}
+  .stage-list{display:flex;flex-direction:column;gap:8px}
+  .stage-row{display:flex;align-items:center;gap:10px;padding:12px;background:#111;border:1px solid #1e1e1e;border-radius:8px;font-size:12px}
+  .stage-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;background:#1a1a1a;color:#444}
+  .stage-num.done{background:#a855f722;color:#c084fc;border:1px solid #a855f744}
+  .stage-num.fail{background:#ef44441a;color:#f87171;border:1px solid #ef444433}
+  .stage-text{flex:1;color:#666}
+  .stage-text.live{color:#ccc}
+  .stage-st{font-size:11px}
+  .st-ok{color:#22c55e}.st-no{color:#ef4444}
+  .demo-section{max-width:860px;margin:0 auto;padding:60px 20px}
+  .demo-section h2{font-size:28px;font-weight:800;margin-bottom:8px}
+  .demo-section>p{color:#666;margin-bottom:36px;font-size:15px}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:20px}
+  .timeline{position:relative;padding-left:32px}
+  .timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:#1e1e1e}
+  .t-event{position:relative;opacity:0;transform:translateY(10px);transition:opacity .4s,transform .4s}
+  .t-event.visible{opacity:1;transform:translateY(0)}
+  .t-dot{position:absolute;left:-27px;top:14px;width:14px;height:14px;border-radius:50%;border:2px solid #333;background:#0a0a0a}
+  .t-event.visible .t-dot{border-color:#c084fc;background:#c084fc}
+  .t-event.ok .t-dot{border-color:#22c55e;background:#22c55e}
+  .t-card{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px 16px;margin-bottom:10px;margin-left:4px}
+  .t-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  .t-time{font-size:11px;font-weight:700;color:#c084fc;background:#a855f71a;padding:2px 8px;border-radius:10px;white-space:nowrap}
+  .t-event.ok .t-time{color:#22c55e;background:#22c55e1a}
+  .t-source{font-size:11px;color:#555;background:#161616;padding:2px 8px;border-radius:10px}
+  .t-title{font-weight:600;font-size:14px;color:#ddd;margin-bottom:6px}
+  .t-body{font-size:13px;color:#666}
+  .email-box{background:#0d0a14;border:1px solid #a855f733;border-radius:8px;padding:14px;font-size:13px}
+  .ef{display:flex;gap:8px;margin-bottom:4px;font-size:12px}
+  .ef span:first-child{color:#555;width:40px;flex-shrink:0}
+  .ef span:last-child{color:#aaa}
+  .eb{color:#888;line-height:1.6;border-top:1px solid #1a0a2a;padding-top:10px;margin-top:8px}
+  .ob{display:inline-block;background:#22c55e1a;color:#22c55e;border:1px solid #22c55e33;padding:2px 8px;border-radius:10px;font-size:11px;margin-top:8px}
+  .cma-box{background:#0d0a14;border:1px solid #c084fc33;border-radius:10px;padding:16px;margin-top:8px}
+  .cma-top{font-size:11px;color:#c084fc;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+  .cma-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a0a2a;font-size:12px}
+  .cma-row:last-child{border-bottom:none}
+  .cma-label{color:#666}
+  .cma-val{color:#ddd;font-weight:600}
+  .cma-val.highlight{color:#c084fc}
+  .booked-box{background:#051a0f;border:1px solid #22c55e33;border-radius:10px;padding:16px;margin-top:8px}
+  .booked-top{font-size:11px;color:#4ade80;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .booked-text{font-size:13px;color:#86efac;line-height:1.6}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:50px 0 0}
+  @media(max-width:600px){.stats{grid-template-columns:1fr}}
+  .stat-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:20px;text-align:center}
+  .stat-card .num{font-size:38px;font-weight:800;color:#c084fc;line-height:1;margin-bottom:6px}
+  .stat-card .stat-label{font-size:13px;color:#666}
+  .cta-section{text-align:center;padding:60px 20px 80px;border-top:1px solid #1a1a1a}
+  .cta-section h2{font-size:28px;font-weight:800;margin-bottom:12px}
+  .cta-section p{color:#666;margin-bottom:32px;font-size:15px}
+  .btn{display:inline-block;background:#9333ea;color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;text-decoration:none}
+  .btn:hover{background:#7e22ce}
+  .btn-ghost{display:inline-block;background:transparent;color:#888;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none;border:1px solid #222;margin-left:12px}
+  .play-wrap{text-align:center;margin-bottom:40px}
+  #playBtn{background:#9333ea;color:#fff;border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer}
+  #playBtn:hover{background:#7e22ce}
+  #playBtn:disabled{background:#333;color:#666;cursor:default}
+  .progress-bar{height:3px;background:#1a1a1a;border-radius:3px;margin-bottom:32px;overflow:hidden}
+  .progress-fill{height:100%;background:#c084fc;width:0%;transition:width .3s}
+  .ticker{text-align:center;font-size:13px;color:#555;margin-bottom:28px;min-height:20px}
+  .ticker.active{color:#c084fc}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .pulsing{animation:pulse 1s infinite}
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
+  <a href="/demo6">6: No-Shows</a><a href="/demo7">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9" class="active">9: Seller Leads</a>
+</div>
+<div class="hero">
+  <div class="tag">Live Demo</div>
+  <h1>"Thinking about selling"<br>becomes a <span>signed listing</span></h1>
+  <p>Sellers don't decide in a day. They research for weeks. Here's how a 14-day nurture sequence turns a casual "what's my home worth?" into a listing appointment — automatically.</p>
+</div>
+<div class="split">
+  <div class="panel before">
+    <div class="panel-label">Without Ajani Automation</div>
+    <h2>Got 3 seller leads. Closed 0.</h2>
+    <p>They filled out "what's my home worth?" You sent a CMA. They said "we're still thinking." You never heard from them again. They listed with an agent who stayed in touch.</p>
+    <div class="stage-list">
+      <div class="stage-row"><div class="stage-num fail">1</div><div class="stage-text live">CMA sent manually — days late</div><div class="stage-st st-no">✗</div></div>
+      <div class="stage-row"><div class="stage-num fail">2</div><div class="stage-text">"Still thinking" — no follow-up sent</div><div class="stage-st st-no">✗ Missed</div></div>
+      <div class="stage-row"><div class="stage-num fail">3</div><div class="stage-text">Week 2 check-in — forgot</div><div class="stage-st st-no">✗ Missed</div></div>
+      <div class="stage-row"><div class="stage-num fail">4</div><div class="stage-text">Week 3 — they listed with another agent</div><div class="stage-st st-no">✗ Lost</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#ef44441a;border:1px solid #ef444433;border-radius:8px;font-size:13px;color:#fca5a5;">⚠️ They weren't ready on day 1. They were ready on day 18. You weren't there.</div>
+  </div>
+  <div class="panel after">
+    <div class="panel-label">With Ajani Automation</div>
+    <h2>14-day nurture → listing appointment booked.</h2>
+    <p>Instant CMA, market insights every 3 days, success stories, urgency nudge. By day 14 they've heard from you 6 times and they trust you. Appointment happens naturally.</p>
+    <div class="stage-list">
+      <div class="stage-row" style="border-color:#a855f744"><div class="stage-num done">1</div><div class="stage-text live">Day 0 — instant CMA email sent</div><div class="stage-st st-ok">✓ Auto</div></div>
+      <div class="stage-row" style="border-color:#a855f744"><div class="stage-num done">2</div><div class="stage-text live">Day 3 — market update for their area</div><div class="stage-st st-ok">✓ Auto</div></div>
+      <div class="stage-row" style="border-color:#a855f744"><div class="stage-num done">3</div><div class="stage-text live">Day 7 — success story + what sellers miss</div><div class="stage-st st-ok">✓ Auto</div></div>
+      <div class="stage-row" style="border-color:#22c55e44"><div class="stage-num done" style="background:#16653133;color:#4ade80;border-color:#22c55e44">4</div><div class="stage-text live">Day 14 — listing appointment requested</div><div class="stage-st st-ok">✓ Booked</div></div>
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">✅ Marcus booked a listing appointment on day 14. He said "you were the only agent who kept in touch."</div>
+  </div>
+</div>
+<div class="demo-section">
+  <div class="section-label">Watch Marcus go from curious to committed</div>
+  <h2>Marcus filled out "what's my home worth?" Watch the 14-day sequence.</h2>
+  <p>He's not ready today. But in 14 days, with the right sequence, he'll be sitting at your table signing a listing agreement.</p>
+  <div class="play-wrap"><button id="playBtn" onclick="runDemo()">▶ Start the Sequence</button></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="ticker" id="ticker">Press play to run the 14-day seller nurture.</div>
+  <div class="timeline">
+    <div class="t-event" id="e1"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 0 · Instant</div><div class="t-source">CMA request form</div></div>
+      <div class="t-title">Marcus fills out "What's my home worth?"</div>
+      <div class="email-box">
+        <div class="ef"><span>To:</span><span>marcus.p@email.com</span></div>
+        <div class="ef"><span>Subj:</span><span>Your home value estimate — 318 Elmwood Ave</span></div>
+        <div class="eb">"Hi Marcus! Based on recent sales in your area, here's what 318 Elmwood is worth right now:"</div>
+        <div class="cma-box">
+          <div class="cma-top">📊 Comparative Market Analysis</div>
+          <div class="cma-row"><span class="cma-label">Your home</span><span class="cma-val">318 Elmwood Ave</span></div>
+          <div class="cma-row"><span class="cma-label">Estimated value</span><span class="cma-val highlight">$412,000 – $428,000</span></div>
+          <div class="cma-row"><span class="cma-label">Avg days on market</span><span class="cma-val">11 days</span></div>
+          <div class="cma-row"><span class="cma-label">Recent comparable sale</span><span class="cma-val">$419k — 2 blocks away</span></div>
+        </div>
+        <div class="ob">✓ Opened 9:47am</div>
+      </div>
+    </div></div>
+    <div class="t-event" id="e2"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 3 · 10:00am</div><div class="t-source">Market update</div></div>
+      <div class="t-title">Day 3 — local market update delivered</div>
+      <div class="email-box">
+        <div class="ef"><span>To:</span><span>marcus.p@email.com</span></div>
+        <div class="ef"><span>Subj:</span><span>What's happening in your neighborhood right now</span></div>
+        <div class="eb">"Marcus — thought you'd want to know: 4 homes in your zip code sold last week, all above asking price. Buyers are competitive right now, which typically means sellers get more. Happy to walk you through what that means for Elmwood specifically."</div>
+        <div class="ob">✓ Opened. Clicked market report link.</div>
+      </div>
+    </div></div>
+    <div class="t-event" id="e3"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 7 · 10:00am</div><div class="t-source">Success story</div></div>
+      <div class="t-title">Day 7 — seller success story + what most sellers miss</div>
+      <div class="email-box">
+        <div class="ef"><span>To:</span><span>marcus.p@email.com</span></div>
+        <div class="ef"><span>Subj:</span><span>How a client got $22k over asking last month</span></div>
+        <div class="eb">"A seller I worked with last month on Birchwood Drive listed at $389k. We got 6 offers in 4 days and closed at $411k. The difference? Timing and presentation. I'd love to share what worked for them and how it might apply to Elmwood."</div>
+        <div class="ob">✓ Opened + replied: "That's interesting"</div>
+      </div>
+    </div></div>
+    <div class="t-event ok" id="e4"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 14 · 10:00am</div><div class="t-source">Appointment ask</div></div>
+      <div class="t-title">Day 14 — listing appointment requested</div>
+      <div class="email-box">
+        <div class="ef"><span>To:</span><span>marcus.p@email.com</span></div>
+        <div class="ef"><span>Subj:</span><span>Ready to take the next step?</span></div>
+        <div class="eb">"Marcus — we've been talking about Elmwood for a couple weeks now. I'd love to do a quick 20-minute walkthrough, no commitment, just to show you exactly what we could get for it and what the process looks like. Does Thursday or Friday work?"</div>
+        <div class="ob">✓ Marcus replied: "Thursday works. What time?"</div>
+      </div>
+    </div></div>
+    <div class="t-event ok" id="e5"><div class="t-dot"></div><div class="t-card">
+      <div class="t-meta"><div class="t-time">Day 14 · 2:30pm</div><div class="t-source">Listing appointment</div></div>
+      <div class="t-title">Listing appointment confirmed. Thursday 11am.</div>
+      <div class="booked-box">
+        <div class="booked-top">📅 Appointment Booked</div>
+        <div class="booked-text">Marcus P. — 318 Elmwood Ave<br>Thursday 11:00am — Listing walkthrough<br><br>"You were the only agent who kept in touch. That's why I'm calling you first."</div>
+      </div>
+    </div></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="num">6</div><div class="stat-label">Seller touchpoints<br>over 14 days</div></div>
+    <div class="stat-card"><div class="num">0</div><div class="stat-label">Manual emails sent<br>by the agent</div></div>
+    <div class="stat-card"><div class="num" style="color:#22c55e">14</div><div class="stat-label">Days from inquiry<br>to listing appointment</div></div>
+  </div>
+</div>
+<div class="cta-section">
+  <h2>Seller leads don't close on day 1. Stay in the game.</h2>
+  <p>We build the full 14-day seller nurture for you. One call to set it up.</p>
+  <a href="mailto:olakunle@ajaniautomation.com?subject=Seller+Nurture+Demo" class="btn">Book a Free Call</a>
+  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a><br><br>
+  <span style="color:#333;font-size:13px">Ajani Automation · linkedin.com/in/olakunleajani</span>
+</div>
+<script>
+  let running=false;
+  function runDemo(){
+    if(running)return;running=true;
+    const btn=document.getElementById('playBtn'),fill=document.getElementById('progressFill'),tick=document.getElementById('ticker');
+    btn.disabled=true;btn.textContent='Running...';tick.className='ticker active pulsing';
+    document.querySelectorAll('.t-event').forEach(el=>el.classList.remove('visible'));fill.style.width='0%';
+    [{id:'e1',delay:500,p:15,msg:'Day 0 — Marcus fills out CMA form. Instant response sent...'},{id:'e2',delay:2500,p:35,msg:'Day 3 — local market update delivered...'},{id:'e3',delay:4500,p:58,msg:'Day 7 — success story sent. Marcus replied!'},{id:'e4',delay:6500,p:80,msg:'Day 14 — listing appointment ask sent...'},{id:'e5',delay:8500,p:100,msg:'Appointment booked. "You were the only one who stayed in touch."'}]
+    .forEach(({id,delay,p,msg})=>setTimeout(()=>{document.getElementById(id).classList.add('visible');fill.style.width=p+'%';tick.textContent=msg;if(p===100){tick.className='ticker';btn.disabled=false;btn.textContent='↺ Replay';running=false;}},delay));
+  }
+</script>
+</body>
+</html>
