@@ -4,18 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dead Lead Reviver | Ajani Automation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
-  .nav-bar{display:flex;justify-content:center;gap:8px;padding:14px 20px;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
-  .nav-bar a{font-size:11px;color:#555;text-decoration:none;padding:5px 12px;border:1px solid #222;border-radius:20px;transition:all .2s}
-  .nav-bar a:hover{color:#ccc;border-color:#444}
-  .nav-bar a.active{color:#fb923c;border-color:#f9731644;background:#f973161a}
-  .hero{text-align:center;padding:70px 20px 50px;border-bottom:1px solid #1a1a1a}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6}
+
+  .nav-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid #1a1a1a;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+  .nav-bar::-webkit-scrollbar{display:none}
+  .nav-back{font-size:12px;color:#555;text-decoration:none;padding:5px 12px;border:1px solid #222;border-radius:20px;transition:all .2s;flex-shrink:0}
+  .nav-back:hover{color:#ccc;border-color:#444}
+  .nav-divider{width:1px;height:16px;background:#222;flex-shrink:0}
+  .nav-bar a.demo-link{font-size:11px;color:#555;text-decoration:none;padding:5px 12px;border:1px solid #222;border-radius:20px;transition:all .2s;flex-shrink:0}
+  .nav-bar a.demo-link:hover{color:#ccc;border-color:#444}
+  .nav-bar a.demo-link.active{color:#fb923c;border-color:#f9731644;background:#f973161a}
+
+  .hero{position:relative;overflow:hidden;text-align:center;padding:70px 20px 50px;border-bottom:1px solid #1a1a1a}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(251,146,60,0.1) 0%,transparent 70%);pointer-events:none}
   .tag{display:inline-block;background:#f973161a;color:#fb923c;border:1px solid #f9731644;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
-  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:16px}
+  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:16px;letter-spacing:-0.02em}
   .hero h1 span{color:#fb923c}
-  .hero p{font-size:18px;color:#888;max-width:540px;margin:0 auto}
+  .hero p{font-size:18px;color:#888;max-width:540px;margin:0 auto;line-height:1.7}
+
   .split{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#1a1a1a}
   @media(max-width:700px){.split{grid-template-columns:1fr}}
   .panel{background:#0d0d0d;padding:32px 28px}
@@ -31,9 +42,10 @@
   .dsub{font-size:11px;color:#444}
   .days-badge{font-size:10px;padding:2px 8px;border-radius:8px;background:#1a1a1a;color:#444}
   .revived{color:#22c55e;font-size:11px}
+
   .demo-section{max-width:860px;margin:0 auto;padding:60px 20px}
-  .demo-section h2{font-size:28px;font-weight:800;margin-bottom:8px}
-  .demo-section>p{color:#666;margin-bottom:36px;font-size:15px}
+  .demo-section h2{font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
+  .demo-section>p{color:#666;margin-bottom:36px;font-size:15px;line-height:1.7}
   .section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-bottom:20px}
   .timeline{position:relative;padding-left:32px}
   .timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:#1e1e1e}
@@ -58,39 +70,66 @@
   .reply-box{background:#051a0f;border:1px solid #22c55e33;border-radius:10px;padding:14px;margin-top:10px}
   .reply-top{font-size:11px;color:#4ade80;margin-bottom:8px;font-weight:700}
   .reply-text{font-size:13px;color:#86efac;line-height:1.6}
+
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:50px 0 0}
   @media(max-width:600px){.stats{grid-template-columns:1fr}}
-  .stat-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:20px;text-align:center}
+  .stat-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:20px;text-align:center;transition:border-color .2s,transform .2s}
+  .stat-card:hover{border-color:#f9731633;transform:translateY(-2px)}
   .stat-card .num{font-size:38px;font-weight:800;color:#fb923c;line-height:1;margin-bottom:6px}
   .stat-card .stat-label{font-size:13px;color:#666}
+
   .cta-section{text-align:center;padding:60px 20px 80px;border-top:1px solid #1a1a1a}
-  .cta-section h2{font-size:28px;font-weight:800;margin-bottom:12px}
+  .cta-section h2{font-size:28px;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em}
   .cta-section p{color:#666;margin-bottom:32px;font-size:15px}
-  .btn{display:inline-block;background:#ea580c;color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;text-decoration:none}
-  .btn:hover{background:#c2410c}
-  .btn-ghost{display:inline-block;background:transparent;color:#888;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none;border:1px solid #222;margin-left:12px}
+  .cta-buttons{display:inline-flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:24px}
+  .btn{display:inline-block;background:#ea580c;color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:background .2s,box-shadow .2s;font-family:inherit}
+  .btn:hover{background:#c2410c;box-shadow:0 0 20px rgba(251,146,60,0.2)}
+  .btn-ghost{display:inline-block;background:transparent;color:#888;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none;border:1px solid #222;cursor:pointer;transition:border-color .2s,color .2s}
+  .btn-ghost:hover{border-color:#444;color:#ccc}
+
   .play-wrap{text-align:center;margin-bottom:40px}
-  #playBtn{background:#ea580c;color:#fff;border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer}
-  #playBtn:hover{background:#c2410c}
-  #playBtn:disabled{background:#333;color:#666;cursor:default}
+  #playBtn{background:#ea580c;color:#fff;border:none;border-radius:50px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s,transform .1s,box-shadow .2s;touch-action:manipulation;font-family:inherit}
+  #playBtn:hover{background:#c2410c;transform:scale(1.02);box-shadow:0 0 24px rgba(251,146,60,0.25)}
+  #playBtn:disabled{background:#333;color:#666;cursor:default;transform:none;box-shadow:none}
   .progress-bar{height:3px;background:#1a1a1a;border-radius:3px;margin-bottom:32px;overflow:hidden}
   .progress-fill{height:100%;background:#fb923c;width:0%;transition:width .3s}
   .ticker{text-align:center;font-size:13px;color:#555;margin-bottom:28px;min-height:20px}
   .ticker.active{color:#fb923c}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
   .pulsing{animation:pulse 1s infinite}
+
+  @media(max-width:480px){
+    .hero{padding:48px 16px 36px}
+    .panel{padding:24px 16px}
+    .demo-section{padding:40px 16px}
+    .cta-section{padding:40px 16px 60px}
+    .cta-buttons{flex-direction:column;align-items:stretch}
+    .cta-buttons .btn,.cta-buttons .btn-ghost{text-align:center;margin-left:0}
+  }
 </style>
 </head>
 <body>
-<div class="nav-bar">
-  <a href="/demo">1: 60s Reply</a><a href="/demo2">2: Follow-Up</a><a href="/demo3">3: Reviews</a><a href="/demo4">4: Qualifier</a><a href="/demo5">5: Listing Blast</a>
-  <a href="/demo6">6: No-Shows</a><a href="/demo7" class="active">7: Dead Leads</a><a href="/demo8">8: Open House</a><a href="/demo9">9: Seller Leads</a>
-</div>
+
+<nav class="nav-bar">
+  <a href="/" class="nav-back">← Portfolio</a>
+  <div class="nav-divider"></div>
+  <a href="/demo" class="demo-link">1: 60s Reply</a>
+  <a href="/demo2" class="demo-link">2: Follow-Up</a>
+  <a href="/demo3" class="demo-link">3: Reviews</a>
+  <a href="/demo4" class="demo-link">4: Qualifier</a>
+  <a href="/demo5" class="demo-link">5: Listing Blast</a>
+  <a href="/demo6" class="demo-link">6: No-Shows</a>
+  <a href="/demo7" class="demo-link active">7: Dead Leads</a>
+  <a href="/demo8" class="demo-link">8: Open House</a>
+  <a href="/demo9" class="demo-link">9: Seller Leads</a>
+</nav>
+
 <div class="hero">
   <div class="tag">Live Demo</div>
   <h1>Your best leads are the ones<br>you already <span>gave up on</span></h1>
   <p>Most agents delete leads that go cold after 30 days. The data says 40% of them were still planning to buy — just not right now. Here's how to catch them.</p>
 </div>
+
 <div class="split">
   <div class="panel before">
     <div class="panel-label">Without Ajani Automation</div>
@@ -117,6 +156,7 @@
     <div style="margin-top:14px;padding:12px 14px;background:#16653133;border:1px solid #22c55e33;border-radius:8px;font-size:13px;color:#86efac;">✅ Marcus replied. He's ready now. Pipeline just grew with zero new lead costs.</div>
   </div>
 </div>
+
 <div class="demo-section">
   <div class="section-label">Watch a cold lead come back to life</div>
   <h2>James went cold 91 days ago. Watch what happens when we reach back out.</h2>
@@ -160,13 +200,17 @@
     <div class="stat-card"><div class="num" style="color:#22c55e">90</div><div class="stat-label">Days of silence reversed<br>with one email</div></div>
   </div>
 </div>
+
 <div class="cta-section">
   <h2>Your next deal is already in your CRM.</h2>
   <p>We build the revival sequence. You just show up for the call.</p>
-  <a href="mailto:olakunle@ajaniautomation.com?subject=Dead+Lead+Revival+Demo" class="btn">Book a Free Call</a>
-  <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a><br><br>
+  <div class="cta-buttons">
+    <a href="mailto:olakunle@ajaniautomation.com?subject=Dead+Lead+Revival+Demo" class="btn">Book a Free Call</a>
+    <a href="mailto:olakunle@ajaniautomation.com" class="btn-ghost">Email Olakunle</a>
+  </div>
   <span style="color:#333;font-size:13px">Ajani Automation · linkedin.com/in/olakunleajani</span>
 </div>
+
 <script>
   let running=false;
   function runDemo(){
