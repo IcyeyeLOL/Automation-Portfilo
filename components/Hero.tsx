@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useWindowWidth } from "../hooks/useWindowWidth";
 
 const GithubIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -48,6 +49,9 @@ export default function Hero() {
   const [wordIdx, setWordIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
+
+  const width = useWindowWidth();
+  const isMobile = width > 0 && width < 768;
 
   // Entrance
   useEffect(() => {
@@ -113,17 +117,19 @@ export default function Hero() {
       style={{
         minHeight: "100vh",
         display: "flex",
-        alignItems: "center",
-        padding: "80px 5% 48px",
+        alignItems: isMobile ? "flex-start" : "center",
+        flexDirection: isMobile ? "column" : "row",
+        padding: isMobile ? "88px 5% 48px" : "80px 5% 48px",
         maxWidth: 1440,
         margin: "0 auto",
-        gap: 60,
+        gap: isMobile ? 36 : 60,
       }}
     >
       {/* ── Left column ── */}
       <div
         style={{
-          flex: "0 0 52%",
+          flex: isMobile ? "none" : "0 0 52%",
+          width: isMobile ? "100%" : undefined,
           display: "flex",
           flexDirection: "column",
           gap: 22,
@@ -307,7 +313,8 @@ export default function Hero() {
           style={{
             ...shownLeft(500),
             display: "flex",
-            gap: 28,
+            gap: isMobile ? 20 : 28,
+            flexWrap: "wrap",
             paddingTop: 8,
             borderTop: "1px solid var(--border)",
           }}
@@ -341,6 +348,7 @@ export default function Hero() {
       <div
         style={{
           flex: 1,
+          width: isMobile ? "100%" : undefined,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -350,7 +358,7 @@ export default function Hero() {
         {/* Code card with float + slide-in */}
         <div
           style={{
-            ...shownRight(300),
+            ...shownRight(isMobile ? 400 : 300),
             width: "100%",
             maxWidth: 540,
             background: "var(--bg-card)",
@@ -439,28 +447,30 @@ export default function Hero() {
           </pre>
         </div>
 
-        {/* Profile photo */}
-        <div
-          style={{
-            ...shownRight(500),
-            width: 180,
-            height: 180,
-            borderRadius: "50%",
-            overflow: "hidden",
-            border: "3px solid var(--accent)",
-            boxShadow: "0 0 50px rgba(57,255,110,0.3)",
-            flexShrink: 0,
-          }}
-        >
-          <Image
-            src="/kunle-face.png"
-            alt="Olakunle Ajani"
-            width={180}
-            height={180}
-            style={{ objectFit: "cover", width: "100%", height: "100%" }}
-            priority
-          />
-        </div>
+        {/* Profile photo - hidden on mobile since avatar is already shown */}
+        {!isMobile && (
+          <div
+            style={{
+              ...shownRight(500),
+              width: 180,
+              height: 180,
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: "3px solid var(--accent)",
+              boxShadow: "0 0 50px rgba(57,255,110,0.3)",
+              flexShrink: 0,
+            }}
+          >
+            <Image
+              src="/kunle-face.png"
+              alt="Olakunle Ajani"
+              width={180}
+              height={180}
+              style={{ objectFit: "cover", width: "100%", height: "100%" }}
+              priority
+            />
+          </div>
+        )}
       </div>
     </section>
   );

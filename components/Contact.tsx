@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useWindowWidth } from "../hooks/useWindowWidth";
 
 const EmailIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -40,6 +41,9 @@ export default function Contact() {
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [focused, setFocused] = useState<string | null>(null);
+
+  const width = useWindowWidth();
+  const isMobile = width > 0 && width < 768;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -94,7 +98,7 @@ export default function Contact() {
       id="contact"
       style={{ padding: "64px 5% 80px", maxWidth: 1440, margin: "0 auto" }}
     >
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 32 : 48, alignItems: "center" }}>
 
         {/* Left copy */}
         <div style={fadeUp(0)}>

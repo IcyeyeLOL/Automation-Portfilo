@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useWindowWidth } from "../hooks/useWindowWidth";
 
 interface Project {
   id: number;
@@ -321,6 +322,8 @@ function ProjectCard({ project }: { project: Project }) {
 export default function Projects() {
   const [triggered, setTriggered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const width = useWindowWidth();
+  const gridCols = width > 0 ? (width < 640 ? 1 : width < 1024 ? 2 : 3) : 3;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -386,11 +389,11 @@ export default function Projects() {
         </p>
       </div>
 
-      {/* 3×3 Grid */}
+      {/* Responsive Grid */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
           gap: 28,
         }}
       >
