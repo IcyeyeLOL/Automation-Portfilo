@@ -73,7 +73,7 @@ function MythCard({ myth, reality, icon, visible }: { myth: string; reality: str
       onClick={() => setFlipped((f) => !f)}
       style={{
         flex: "1 1 280px",
-        minHeight: 200,
+        minHeight: 280,
         cursor: "pointer",
         perspective: 1000,
         opacity: visible ? 1 : 0,
@@ -86,7 +86,7 @@ function MythCard({ myth, reality, icon, visible }: { myth: string; reality: str
           position: "relative",
           width: "100%",
           height: "100%",
-          minHeight: 200,
+          minHeight: 280,
           transformStyle: "preserve-3d",
           transition: "transform 0.55s cubic-bezier(0.16,1,0.3,1)",
           transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
