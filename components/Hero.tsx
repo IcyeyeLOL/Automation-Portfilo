@@ -276,9 +276,9 @@ export default function Hero() {
 
           <div style={{ display: "flex", gap: 18 }}>
             {[
-              { icon: <GithubIcon />, href: "https://github.com", label: "GitHub" },
-              { icon: <LinkedinIcon />, href: "https://linkedin.com", label: "LinkedIn" },
-              { icon: <InstagramIcon />, href: "https://instagram.com", label: "Instagram" },
+              { icon: <GithubIcon />, href: "https://github.com/IcyeyeLOL", label: "GitHub" },
+              { icon: <LinkedinIcon />, href: "https://www.linkedin.com/in/olakunleajani/", label: "LinkedIn" },
+              { icon: <InstagramIcon />, href: "https://www.instagram.com/i_had_to_change_username/", label: "Instagram" },
             ].map(({ icon, href, label }) => (
               <a
                 key={label}
