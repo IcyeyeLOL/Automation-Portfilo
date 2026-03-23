@@ -26,6 +26,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# large media files
+public/*.mp4
+public/*.mov
+public/*.webm
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
