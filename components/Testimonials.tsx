@@ -4,12 +4,8 @@ import { useState, useRef, useEffect } from "react";
 
 export default function Testimonials() {
   const [triggered, setTriggered] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -19,39 +15,6 @@ export default function Testimonials() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
-
-  const togglePlay = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) { v.play(); setIsPlaying(true); }
-    else { v.pause(); setIsPlaying(false); }
-  };
-
-  const handleTimeUpdate = () => {
-    const v = videoRef.current;
-    if (!v || !v.duration) return;
-    setProgress((v.currentTime / v.duration) * 100);
-  };
-
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) setDuration(videoRef.current.duration);
-  };
-
-  const handleEnded = () => setIsPlaying(false);
-
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    const v = videoRef.current;
-    if (!v) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const ratio = (e.clientX - rect.left) / rect.width;
-    v.currentTime = ratio * v.duration;
-  };
-
-  const formatTime = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return `${m}:${sec.toString().padStart(2, "0")}`;
-  };
 
   return (
     <section
@@ -131,8 +94,8 @@ export default function Testimonials() {
             borderRadius: 20,
             overflow: "hidden",
             background: "var(--bg-card)",
-            border: `1px solid ${isHovered || isPlaying ? "rgba(57,255,110,0.35)" : "var(--border)"}`,
-            boxShadow: isHovered || isPlaying
+            border: `1px solid ${isHovered ? "rgba(57,255,110,0.35)" : "var(--border)"}`,
+            boxShadow: isHovered
               ? "0 0 50px rgba(57,255,110,0.12), 0 20px 60px rgba(0,0,0,0.5)"
               : "0 8px 40px rgba(0,0,0,0.4)",
             transition: "border-color 0.35s, box-shadow 0.35s",
@@ -140,83 +103,30 @@ export default function Testimonials() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Video wrapper */}
+          {/* iframe wrapper */}
           <div
             style={{
               position: "relative",
               width: "100%",
               aspectRatio: "16 / 9",
               background: "#000",
-              cursor: "pointer",
             }}
-            onClick={togglePlay}
           >
-            <video
-              ref={videoRef}
-              src="/VID_20260323_162008.mp4"
+            <iframe
+              src="https://www.youtube.com/embed/upEkMB8pYRA?si=TuuP_DnfOVRHx1cz&rel=0&modestbranding=1"
+              title="Karol - Client Testimonial"
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
+                border: "none",
                 display: "block",
               }}
-              playsInline
-              preload="metadata"
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
-              onEnded={handleEnded}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
             />
 
-            {/* Overlay gradient when paused */}
-            {!isPlaying && (
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)",
-                  pointerEvents: "none",
-                }}
-              />
-            )}
-
-            {/* Play / Pause button */}
-            {!isPlaying && (
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  pointerEvents: "none",
-                }}
-              >
-                <div
-                  style={{
-                    width: 72,
-                    height: 72,
-                    borderRadius: "50%",
-                    background: "rgba(57, 255, 110, 0.15)",
-                    border: "2px solid rgba(57, 255, 110, 0.7)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backdropFilter: "blur(8px)",
-                    boxShadow: "0 0 30px rgba(57,255,110,0.3), 0 0 60px rgba(57,255,110,0.1)",
-                    animation: "pulseRing 2s infinite",
-                    transition: "transform 0.2s",
-                    transform: isHovered ? "scale(1.1)" : "scale(1)",
-                  }}
-                >
-                  {/* Triangle play icon */}
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                    <path d="M8 5.5L19 12L8 18.5V5.5Z" fill="#39ff6e" />
-                  </svg>
-                </div>
-              </div>
-            )}
-
-            {/* Subtle "● TESTIMONIAL" badge top-left */}
+            {/* Testimonial badge */}
             <div
               style={{
                 position: "absolute",
@@ -239,87 +149,38 @@ export default function Testimonials() {
             </div>
           </div>
 
-          {/* Custom progress + controls bar */}
-          <div style={{ padding: "14px 20px 18px", background: "var(--bg-card)" }}>
-            {/* Seek bar */}
-            <div
-              style={{
-                width: "100%",
-                height: 4,
-                background: "rgba(255,255,255,0.08)",
-                borderRadius: 9999,
-                cursor: "pointer",
-                marginBottom: 12,
-                position: "relative",
-                overflow: "hidden",
-              }}
-              onClick={handleSeek}
-            >
+          {/* Client info bar */}
+          <div
+            style={{
+              padding: "14px 20px 16px",
+              background: "var(--bg-card)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderTop: "1px solid var(--border)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {/* Avatar placeholder */}
               <div
                 style={{
-                  position: "absolute",
-                  left: 0,
-                  top: 0,
-                  height: "100%",
-                  width: `${progress}%`,
-                  background: "linear-gradient(to right, #39ff6e, #22c55e)",
-                  borderRadius: 9999,
-                  transition: "width 0.1s linear",
-                  boxShadow: "0 0 8px rgba(57,255,110,0.6)",
-                }}
-              />
-            </div>
-
-            {/* Bottom row: play btn + time + label */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              {/* Play/pause icon button */}
-              <button
-                onClick={togglePlay}
-                style={{
-                  width: 36,
-                  height: 36,
+                  width: 34,
+                  height: 34,
                   borderRadius: "50%",
                   background: "rgba(57,255,110,0.1)",
-                  border: "1px solid rgba(57,255,110,0.3)",
+                  border: "1px solid rgba(57,255,110,0.25)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                  transition: "background 0.2s, border-color 0.2s",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
                   color: "var(--accent)",
-                  padding: 0,
+                  flexShrink: 0,
                 }}
               >
-                {isPlaying ? (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="6" y="4" width="4" height="16" rx="1" />
-                    <rect x="14" y="4" width="4" height="16" rx="1" />
-                  </svg>
-                ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5.5L19 12L8 18.5V5.5Z" />
-                  </svg>
-                )}
-              </button>
-
-              {/* Time */}
-              <span
-                style={{
-                  fontSize: "0.75rem",
-                  color: "var(--text-muted)",
-                  fontFamily: "monospace",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                {formatTime((progress / 100) * duration)} / {formatTime(duration)}
-              </span>
-
-              {/* Spacer */}
-              <div style={{ flex: 1 }} />
-
-              {/* Client label */}
-              <div style={{ textAlign: "right" }}>
+                K
+              </div>
+              <div>
                 <div
                   style={{
                     fontSize: "0.8rem",
@@ -335,6 +196,8 @@ export default function Testimonials() {
                 </div>
               </div>
             </div>
+
+            <div style={{ color: "#f59e0b", fontSize: "0.8rem", letterSpacing: 2 }}>★★★★★</div>
           </div>
         </div>
       </div>
@@ -350,12 +213,7 @@ export default function Testimonials() {
           transition: "opacity 0.75s cubic-bezier(0.16,1,0.3,1) 350ms, transform 0.75s cubic-bezier(0.16,1,0.3,1) 350ms",
         }}
       >
-        <div
-          style={{
-            maxWidth: 680,
-            textAlign: "center",
-          }}
-        >
+        <div style={{ maxWidth: 680, textAlign: "center" }}>
           <div
             style={{
               fontSize: "clamp(1.1rem, 2.5vw, 1.35rem)",
@@ -364,7 +222,6 @@ export default function Testimonials() {
               color: "var(--text-primary)",
               letterSpacing: "-0.02em",
               fontStyle: "italic",
-              position: "relative",
             }}
           >
             <span
@@ -394,7 +251,6 @@ export default function Testimonials() {
             </span>
           </div>
 
-          {/* Divider line with stars */}
           <div
             style={{
               display: "flex",
