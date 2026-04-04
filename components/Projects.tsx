@@ -20,7 +20,7 @@ const projects: Project[] = [
     id: 1,
     title: "60-Second Reply",
     description:
-      "Instantly responds to every new lead within 60 seconds via SMS — before your competition even sees the notification.",
+      "Instantly responds to every new inquiry within 60 seconds via SMS or email — before your competition even sees the notification.",
     tags: ["Twilio", "OpenAI", "Webhooks", "CRM"],
     gradient: "linear-gradient(135deg, #1a0800 0%, #2d1400 60%, #1a0a00 100%)",
     emoji: "⚡",
@@ -32,7 +32,7 @@ const projects: Project[] = [
     id: 2,
     title: "7-Day Follow-Up Machine",
     description:
-      "Runs a fully automated 7-day SMS + email drip sequence that keeps leads warm until they're ready to move.",
+      "Runs a fully automated 7-day SMS + email drip sequence that keeps prospects warm until they're ready to buy.",
     tags: ["n8n", "Twilio", "Gmail API", "Airtable"],
     gradient: "linear-gradient(135deg, #0d0618 0%, #1a0d2e 60%, #0f0820 100%)",
     emoji: "🔄",
@@ -44,7 +44,7 @@ const projects: Project[] = [
     id: 3,
     title: "Review & Referral Robot",
     description:
-      "After every closed deal, automatically sends review requests, captures feedback, and triggers referral ask sequences.",
+      "After every completed job or purchase, automatically sends review requests, captures feedback, and triggers referral ask sequences.",
     tags: ["Make.com", "Google Reviews", "Twilio", "HubSpot"],
     gradient: "linear-gradient(135deg, #181000 0%, #2e1f00 60%, #1c1400 100%)",
     emoji: "⭐",
@@ -56,7 +56,7 @@ const projects: Project[] = [
     id: 4,
     title: "Lead Qualifier",
     description:
-      "AI-powered SMS bot that asks the right questions, scores leads by motivation and timeline, and routes hot ones straight to your calendar.",
+      "AI-powered SMS bot that asks the right questions, scores leads by intent and readiness, and routes hot ones straight to your calendar.",
     tags: ["OpenAI", "Twilio", "Calendly API", "n8n"],
     gradient: "linear-gradient(135deg, #061206 0%, #0e2210 60%, #081508 100%)",
     emoji: "🎯",
@@ -66,12 +66,12 @@ const projects: Project[] = [
   },
   {
     id: 5,
-    title: "New Listing Blast",
+    title: "New Offer Blast",
     description:
-      "The moment a listing goes live, automatically blasts your entire database via SMS, email, and social — in under 2 minutes.",
-    tags: ["Zapier", "Twilio", "Mailchimp", "MLS API"],
+      "The moment a new product, service, or promotion goes live, automatically blasts your entire list via SMS, email, and social — in under 2 minutes.",
+    tags: ["Zapier", "Twilio", "Mailchimp", "Webhook"],
     gradient: "linear-gradient(135deg, #001418 0%, #002028 60%, #001a20 100%)",
-    emoji: "🏡",
+    emoji: "📣",
     url: "/demo5/index.html",
     accentColor: "#06b6d4",
     accentRgb: "6, 182, 212",
@@ -80,7 +80,7 @@ const projects: Project[] = [
     id: 6,
     title: "No-Show Eliminator",
     description:
-      "Sends smart confirmation sequences before every appointment and auto-reschedules no-shows without any manual effort.",
+      "Sends smart reminder and confirmation sequences before every appointment and auto-reschedules no-shows without any manual effort.",
     tags: ["Twilio", "Calendly", "n8n", "OpenAI"],
     gradient: "linear-gradient(135deg, #180000 0%, #2e0000 60%, #200005 100%)",
     emoji: "🚫",
@@ -92,7 +92,7 @@ const projects: Project[] = [
     id: 7,
     title: "Dead Lead Reviver",
     description:
-      "Re-engages cold leads from your CRM with a personalized AI message sequence timed for when they're most likely to respond.",
+      "Re-engages cold contacts from your CRM with a personalized AI message sequence timed for when they're most likely to respond.",
     tags: ["Claude API", "HubSpot", "Twilio", "Make.com"],
     gradient: "linear-gradient(135deg, #150a00 0%, #261500 60%, #1a1000 100%)",
     emoji: "💀",
@@ -102,21 +102,21 @@ const projects: Project[] = [
   },
   {
     id: 8,
-    title: "Open House Follow-Up",
+    title: "Event Follow-Up System",
     description:
-      "Captures sign-in data at your open house and immediately launches a personalized follow-up sequence for every attendee.",
+      "Captures attendee data at any event or webinar and immediately launches a personalized follow-up sequence for every participant.",
     tags: ["Airtable", "Twilio", "OpenAI", "Zapier"],
     gradient: "linear-gradient(135deg, #000a18 0%, #00102e 60%, #000d22 100%)",
-    emoji: "🏠",
+    emoji: "🎟️",
     url: "/demo8/index.html",
     accentColor: "#3b82f6",
     accentRgb: "59, 130, 246",
   },
   {
     id: 9,
-    title: "Seller Lead Nurture",
+    title: "Long-Term Lead Nurture",
     description:
-      "Long-term AI nurture sequence for seller leads — sends market updates, home value reports, and check-ins until they're ready to list.",
+      "Long-term AI nurture sequence for cold prospects — sends relevant updates, value-add content, and periodic check-ins until they're ready to buy.",
     tags: ["n8n", "Claude API", "Gmail API", "HubSpot"],
     gradient: "linear-gradient(135deg, #0a0018 0%, #150030 60%, #0d0020 100%)",
     emoji: "📈",
@@ -384,7 +384,7 @@ export default function Projects() {
             maxWidth: 500,
           }}
         >
-          Each system solves a real real-estate problem — more replies, more booked calls,
+          Each system solves a real business problem — more replies, more booked calls,
           fewer leads falling through the cracks.
         </p>
       </div>

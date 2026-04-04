@@ -21,24 +21,25 @@ const InstagramIcon = () => (
 );
 
 const CODE_LINES = [
-  { text: "// 60-Second Reply Bot", color: "#6c7086" },
-  { text: "const onNewLead = async (lead) => {", color: "#cdd6f4" },
+  { text: "// Workflow Automation", color: "#6c7086" },
+  { text: "const onTrigger = async (contact) => {", color: "#cdd6f4" },
   { text: '  const msg = await ai.compose({', color: "#cdd6f4" },
-  { text: '    template: "instant_reply",', color: "#a6e3a1" },
-  { text: "    agent: lead.assignedAgent,", color: "#cdd6f4" },
+  { text: '    template: "follow_up",', color: "#a6e3a1" },
+  { text: "    context: contact.history,", color: "#cdd6f4" },
   { text: "  });", color: "#cdd6f4" },
-  { text: "  await sms.send(lead.phone, msg);", color: "#cdd6f4" },
-  { text: '  await crm.tag(lead.id, "contacted");', color: "#cdd6f4" },
-  { text: "  return { replied: true };", color: "#cdd6f4" },
+  { text: "  await notify.send(contact.email, msg);", color: "#cdd6f4" },
+  { text: '  await crm.tag(contact.id, "contacted");', color: "#cdd6f4" },
+  { text: "  return { sent: true };", color: "#cdd6f4" },
   { text: "};", color: "#cdd6f4" },
 ];
 
 const TYPED_WORDS = [
-  "real estate leads",
+  "lead follow-ups",
   "dead leads",
   "no-shows",
-  "open house follow-ups",
-  "seller pipelines",
+  "cold outreach",
+  "client pipelines",
+  "appointment reminders",
 ];
 
 const ease = "cubic-bezier(0.16,1,0.3,1)";
@@ -213,7 +214,7 @@ export default function Hero() {
               />
             </span>
             <br />
-            for real estate agents.
+            for growing businesses.
           </h1>
         </div>
 
@@ -227,8 +228,8 @@ export default function Hero() {
               maxWidth: 520,
             }}
           >
-            I build SMS bots, AI follow-up machines, and lead pipelines that run
-            24/7 — so agents close more deals without lifting a finger.
+            I build SMS bots, AI follow-up machines, and automated workflows that
+            run 24/7 — so your business keeps moving without lifting a finger.
           </p>
         </div>
 

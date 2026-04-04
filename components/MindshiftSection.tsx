@@ -7,27 +7,27 @@ const MYTHS = [
   {
     myth: "\"AI automation is too complicated for my business.\"",
     reality:
-      "You don't touch a single line of code. We build it, configure it, and hand you a system that runs while you sleep. Your job is just to show up for the calls it books.",
+      "You don't touch a single line of code. We build it, configure it, and hand you a system that runs while you sleep. Your job is just to show up for the opportunities it creates.",
     icon: "🧠",
   },
   {
-    myth: "\"My clients want the personal touch — not a bot.\"",
+    myth: "\"My customers want the personal touch — not a bot.\"",
     reality:
-      "Replying in 60 seconds feels more personal than ghosting someone for 3 hours. The message sounds like you. The timing just happens automatically. Clients can't tell the difference — they only notice when you're slow.",
+      "Responding in 60 seconds feels more personal than going silent for hours. The message sounds like you. The timing just happens automatically. Customers can't tell the difference — they only notice when you're slow.",
     icon: "🤝",
   },
   {
     myth: "\"I'll set this up someday when things slow down.\"",
     reality:
-      "Things never slow down. That's exactly why you need this. Every week you wait is another week of lost leads, missed follow-ups, and deals that quietly closed with someone else.",
+      "Things never slow down. That's exactly why you need this. Every week you wait is another week of lost leads, missed follow-ups, and revenue that quietly went to a competitor.",
     icon: "⏳",
   },
 ];
 
 const STATS = [
-  { label: "Top agents already using automated follow-up", pct: 72 },
+  { label: "Businesses already using automated follow-up", pct: 72 },
   { label: "Leads lost because response took over 5 minutes", pct: 78 },
-  { label: "Agents who plan to adopt AI tools within 12 months", pct: 85 },
+  { label: "Companies planning to adopt AI tools within 12 months", pct: 85 },
 ];
 
 function AnimatedBar({ pct, delay, accent }: { pct: number; delay: number; accent: string }) {
@@ -262,7 +262,7 @@ export default function MindshiftSection() {
             lineHeight: 1.7,
           }}
         >
-          The top agents in your market are already running automated systems. Every week you don&apos;t is a week they pull further ahead.
+          The top businesses in your space are already running automated systems. Every week you don&apos;t is a week they pull further ahead.
         </p>
       </div>
 
@@ -320,9 +320,9 @@ export default function MindshiftSection() {
             <span style={{ color: "#f87171" }}>every quarter.</span>
           </h3>
           <p style={{ fontSize: "0.92rem", color: "var(--text-muted)", lineHeight: 1.72 }}>
-            Agents using automated lead follow-up close{" "}
+            Businesses using automated lead follow-up close{" "}
             <span style={{ color: "var(--accent)", fontWeight: 700 }}>47% more deals</span> than those who don&apos;t.
-            The agents winning right now aren&apos;t working harder — they built systems that work for them.
+            The businesses winning right now aren&apos;t working harder — they built systems that work for them.
           </p>
           <div
             style={{
@@ -377,7 +377,7 @@ export default function MindshiftSection() {
             </div>
           ))}
           <p style={{ fontSize: "0.72rem", color: "#444", marginTop: 4 }}>
-            Sources: NAR 2024 Tech Survey · MIT Sloan AI Adoption Study · HubSpot Sales Report
+            Sources: HubSpot Sales Report · MIT Sloan AI Adoption Study · Salesforce State of Sales 2024
           </p>
         </div>
       </div>
@@ -401,7 +401,7 @@ export default function MindshiftSection() {
             lineHeight: 1.7,
           }}
         >
-          The agents at the top of your market didn&apos;t get there by being busier.{" "}
+          The businesses at the top of your market didn&apos;t get there by being busier.{" "}
           <span style={{ color: "#e2e2e2", fontWeight: 600 }}>
             They got there by building systems that work while they sleep.
           </span>{" "}

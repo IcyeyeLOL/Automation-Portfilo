@@ -10,7 +10,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Olakunle Ajani — Automation Engineer",
   description:
-    "I build automation systems that handle lead outreach, AI email responses, appointment booking, and CRM integrations — so your business runs 24/7.",
+    "I build automation systems that handle lead follow-up, AI messaging, appointment booking, and CRM integrations — so your business runs 24/7 without lifting a finger.",
 };
 
 export default function RootLayout({
